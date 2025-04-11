@@ -17,7 +17,7 @@ public class HomeController {
     @Autowired
     private ProdutoService produtoService;
 
-    @GetMapping
+    @GetMapping ("/home")
     public String home(Model model) {
         model.addAttribute("produtos", produtoService.buscarTodosOsProdutos());
         return "index";
