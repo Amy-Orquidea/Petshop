@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body>
+    <div th:fragment="sidebar">   
+        <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="display:none" id="mySidebar">
+            <div class="text-center mb-4">
+                <img src="/imagens/logos/LogoInterdata.png" class="img-fluid" alt="Logo" style="width: 100px;">
+            </div>
+            <button class="w3-bar-item w3-button w3-large" onclick="w3_close()"> &times;</button>
+            <div><a href="/"><i class="bi bi-house-door"></i> Home</a> </div>
+            <div><a href="/animais">Animais</a> </div>
+            <div><a href="/clientes">Clientes</a> </div>
+            <div><a href="/produtos">Produtos</a> </div>
+            <div><a href="/vendedores">Vendedores</a> </div>
+            <div><a href="/pedidos">Pedidos</a> </div>
+            <div><a href="#">Itens De Pedidos</a> </div>
+            <div><a href="/estoques">Estoques</a> </div>
+            <div><a href="/categorias">Categorias</a> </div>
+            <div><a href="/racas">Raças</a> </div>
+            <div><a href="/especies">Especies</a> </div>
+            <div><a href="#">Pagamentos</a> </div>
+            <div><a href="#">Formas de Pagamentos</a> </div>
+            <div><a href="#">Relatórios</a> </div>
+        </div>
+            <div class="w3-teal">
+                <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
+            </div>
+        <script>
+            function w3_open() {
+                document.getElementById("main").style.marginLeft = "25%";
+                document.getElementById("mySidebar").style.width = "25%";
+                document.getElementById("mySidebar").style.display = "block";
+                document.getElementById("openNav").style.display = 'none';
+            }
+            function w3_close() {
+                document.getElementById("main").style.marginLeft = "5%";
+                document.getElementById("mySidebar").style.display = "none";
+                document.getElementById("openNav").style.display = "inline-block";
+            }
+        </script>
+    </div>
+    
+</body>
+
+</html>

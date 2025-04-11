@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Cadastro de Pedido</title>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"  rel="stylesheet">
+    <link href="../css/estilo.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <script>
+       
+        window.onload = function() {
+            var dataAtual = new Date();
+            
+          
+            var data = dataAtual.toISOString().split('T')[0];
+            document.getElementById("data-pedido").value = data;
+
+         
+            var horas = String(dataAtual.getHours()).padStart(2, '0');
+            var minutos = String(dataAtual.getMinutes()).padStart(2, '0');
+            document.getElementById("hora-pedido").value = horas + ":" + minutos;
+        };
+    </script>
+    <style>
+       
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .form-group {
+            flex: 1;
+            margin-right: 15px;
+        }
+        .form-group:last-child {
+            margin-right: 0;
+        }
+
+       
+    </style>
+</head>
+<body onload="window.onload()">
+    <div th:replace="fragmentos/menu-lateral :: sidebar"></div>
+    <div class="centralizado" id="main">
+<div class="container">
+
+    <div class="container form-container">
+        <h1 class="text-center mb-4">Cadastro de Pedido</h1>
+        <form action="/pedidos" method="POST">
+            
+            <!-- Dados do Cliente e Pet -->
+            <fieldset class="mb-4">
+                <legend class="text-primary">Dados do Cliente e Pet</legend>
+                <div class="form-row">
+                    <div class="form-group mb-3 col-12 col-md-4">
+                        <label for="nome-cliente" class="form-label">Nome do Cliente</label>
+                        <input type="text" id="nome-cliente" name="nome-cliente" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 col-md-4">
+                        <label for="nome-pet" class="form-label">Nome do Pet</label>
+                        <input type="text" id="nome-pet" name="nome-pet" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 col-md-4">
+                        <label for="tipo-pet" class="form-label">Tipo de Pet</label>
+                        <select id="tipo-pet" name="tipo-pet" class="form-select" required>
+                            <option value="cachorro">Cachorro</option>
+                            <option value="gato">Gato</option>
+                            <option value="passaro">Pássaro</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Serviços Petshop -->
+            <fieldset class="mb-4">
+                <legend class="text-primary">Serviços Petshop</legend>
+                <div class="form-row">
+                    <div class="form-group mb-3 col-12 col-md-4">
+                        <label for="servico" class="form-label">Serviço Desejado</label>
+                        <select id="servico" name="servico" class="form-select" required>
+                            <option value="banho">Banho</option>
+                            <option value="tosa">Tosa</option>
+                            <option value="vacinas">Vacinas</option>
+                            <option value="consulta">Consulta veterinária</option>
+                            <option value="outro-servico">Outro (descreva abaixo)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 col-md-8">
+                        <label for="descricao-servico" class="form-label">Descrição do Serviço (se aplicável)</label>
+                        <textarea id="descricao-servico" name="descricao-servico" class="form-control" rows="1"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Produtos e Ração -->
+            <fieldset class="mb-4">
+                <legend class="text-primary">Produtos e Ração</legend>
+                <div class="form-row">
+                    <div class="form-group mb-3 col-12 col-md-4">
+                        <label for="produto" class="form-label">Produto ou Ração Desejada</label>
+                        <select id="produto" name="produto" class="form-select" required>
+                            <option value="racao-cachorro">Ração para Cachorro</option>
+                            <option value="racao-gato">Ração para Gato</option>
+                            <option value="brinquedo">Brinquedo</option>
+                            <option value="acessorio">Acessório (coleira, peitoral, etc.)</option>
+                            <option value="outro-produto">Outro Produto (descreva abaixo)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 col-md-8">
+                        <label for="descricao-produto" class="form-label">Descrição do Produto (se aplicável)</label>
+                        <textarea id="descricao-produto" name="descricao-produto" class="form-control" rows="1"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Detalhes do Pedido -->
+            <fieldset class="mb-4">
+                <legend class="text-primary">Detalhes do Pedido</legend>
+                <div class="form-row">
+                    <div class="form-group mb-3 col-12 col-md-3">
+                        <label for="quantidade" class="form-label">Quantidade</label>
+                        <input type="number" id="quantidade" name="quantidade" class="form-control" min="1" required>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 col-md-3">
+                        <label for="data-pedido" class="form-label">Data do Pedido</label>
+                        <input type="date" id="data-pedido" name="data-pedido" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 col-md-3">
+                        <label for="hora-pedido" class="form-label">Hora do Pedido</label>
+                        <input type="time" id="hora-pedido" name="hora-pedido" class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3 col-12 col-md-3">
+                        <label for="observacoes" class="form-label">Observações Adicionais</label>
+                        <textarea id="observacoes" name="observacoes" class="form-control" rows="1"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary w-100">Cadastrar Pedido</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
