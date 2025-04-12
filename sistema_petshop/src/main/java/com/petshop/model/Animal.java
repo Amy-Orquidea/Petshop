@@ -139,6 +139,14 @@ public class Animal {
         return true;
     }
 
+    public List<Itens_de_Pedidos> getItens_de_pedidos() {
+        return itens_de_pedidos;
+    }
+
+    public void setItens_de_pedidos(List<Itens_de_Pedidos> itens_de_pedidos) {
+        this.itens_de_pedidos = itens_de_pedidos;
+    }
+
     
  
 }
