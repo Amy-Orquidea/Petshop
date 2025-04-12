@@ -2,8 +2,8 @@ package com.petshop.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -76,7 +76,7 @@ public class ProdutoController {
             Path caminho = Paths.get(imagesPath + nomeArquivo);
             Files.copy(foto.getInputStream(), caminho);
             produto.setFotoPath("imagens/produtos/" + nomeArquivo);
-        }
+        }   
         produtoService.salvarProduto(produto);
         return "redirect:/produtos";
     }

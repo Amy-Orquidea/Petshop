@@ -2,8 +2,8 @@ package com.petshop.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.petshop.model.Cliente;
-
 import com.petshop.services.ClienteService;
 
 @Controller
@@ -72,7 +71,7 @@ public class ClienteController {
             String nomeArquivo = foto.getOriginalFilename();  // adicionar uma chave tipo data e hora
             Path caminho = Paths.get(imagesPath + nomeArquivo);
             Files.copy(foto.getInputStream(), caminho);
-            cliente.setFotoPath(caminho.toString());
+            cliente.setFotoPath("imagens/clientes/" + nomeArquivo);
         }
         clienteService.salvarCliente(cliente);
         return "redirect:/clientes";
