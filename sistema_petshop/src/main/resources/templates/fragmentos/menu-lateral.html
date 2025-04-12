@@ -6,24 +6,24 @@
 <body>
     <div th:fragment="sidebar">   
         <div class="w3-sidebar w3-bar-block w3-card w3-animate-left" style="background-color: #008B8B; display:none" id="mySidebar">
-            <div class="text-center mb-4" style="background-color: #008B8B;">
+            <button id="botao" style="background-color: transparent; color: black;" onmouseover="this.style.backgroundColor='antiquewhite';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='black';" onclick="w3_close()"> &times;</button>
+            <div class="mb-4" style="background-color: #008B8B; text-align: center;">   
                 <img src="/imagens/logos/LogoInterdata.png" class="img-fluid" alt="Logo" style="width: 100px;">
             </div>
-            <button style="background-color: #008B8B; color: black;" class="w3-bar-item w3-button w3-large" onclick="w3_close()"> &times;</button>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 37%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/home" role="button"><i class="bi bi-house-door"></i> Home</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 36%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/animais" role="button"><i class="bi bi-house-door"></i> Animais</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 36%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/clientes" role="button"><i class="bi bi-house-door"></i> Clientes</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 35%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/produtos" role="button"><i class="bi bi-house-door"></i> Produtos</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 31%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/vendedores" role="button"><i class="bi bi-house-door"></i> Vendedores</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 36%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/pedidos" role="button"><i class="bi bi-house-door"></i> Pedidos</a>
-            <a class="btn btn-primary" style="padding-left: 27%; padding-right: 18%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/#" role="button"><i class="bi bi-house-door"></i> Itens de Pedidos</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 36%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/estoques" role="button"><i class="bi bi-house-door"></i> Estoque</a>
-            <a class="btn btn-primary" style="padding-left: 30%; padding-right: 36%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/categorias" role="button"><i class="bi bi-house-door"></i> Categorias</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 36%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/racas" role="button"><i class="bi bi-house-door"></i> Raças</a>
-            <a class="btn btn-primary" style="padding-left: 31%; padding-right: 38%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="/especies" role="button"><i class="bi bi-house-door"></i> Espécies</a>
-            <a class="btn btn-primary" style="padding-left: 27%; padding-right: 35%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="#" role="button"><i class="bi bi-house-door"></i> Pagamentos</a>
-            <a class="btn btn-primary" style="padding-left: 14%; padding-right: 10%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="#" role="button"><i class="bi bi-house-door"></i> Formas de Pagamento</a>
-            <a class="btn btn-primary" style="padding-left: 30%; padding-right: 38%; border-color: #008B8B; background-color: #008B8B; font-size: medium;" href="#" role="button"><i class="bi bi-house-door"></i> Relatórios</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/home" role="button"><i class="bi bi-house"></i> Home</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/animais" role="button"><i class="bi bi-bug"></i> Animais</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/clientes" role="button"><i class="bi bi-people"></i> Clientes</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/produtos" role="button"><i class="bi bi-box2"></i> Produtos</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/vendedores" role="button"><i class="bi bi-person-workspace"></i> Vendedores</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/pedidos" role="button"><i class="bi bi-bag"></i> Pedidos</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/#" role="button"><i class="bi bi-cart"></i> Itens de Pedidos</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/estoques" role="button"><i class="bi bi-boxes"></i> Estoque</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/categorias" role="button"><i class="bi bi-tags"></i> Categorias</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/racas" role="button"><i class="bi bi-tags"></i> Raças</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="/especies" role="button"><i class="bi bi-tags"></i> Espécies</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="#" role="button"><i class="bi bi-credit-card"></i> Pagamentos</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="#" role="button"><i class="bi bi-wallet2"></i> Formas de Pagamento</a>
+            <a class="btn btn-primary amy" style="background-color: transparent; color: white;" onmouseover="this.style.backgroundColor='antiquewhite'; this.style.color='black';" onmouseout="this.style.backgroundColor='transparent'; this.style.color='white';" href="#" role="button"><i class="bi bi-file-earmark"></i> Relatórios</a>
         </div>
             <div class="w3-teal">
                 <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">&#9776;</button>
@@ -40,6 +40,7 @@
                 document.getElementById("mySidebar").style.display = "none";
                 document.getElementById("openNav").style.display = "inline-block";
             }
+
         </script>
     </div>
     
