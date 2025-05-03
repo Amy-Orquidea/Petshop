@@ -40,7 +40,7 @@ public class PedidoService {
 
     // Editar pedido (atualizar suas informações)
     public Pedido atualizarPedido(Pedido pedido) {
-        if (pedido.getId() != null) {
+        if (pedido.getNumeroPedido() != null) {
             return pedidoRepository.save(pedido); // aqui chamamos o método save acima
         }
         return null;

@@ -24,7 +24,7 @@ public class Pagamentos {
     private List<Pedido> pedidos;
     @ManyToOne
     @JoinColumn(name = "formas_id", insertable = false, updatable = false)
-    private Formas_de_Pagamento formas_de_Pagamento;
+    private Formas_de_Pagamento formas_de_pagamento;
 
     // constructors
     public Pagamentos() {
@@ -60,11 +60,11 @@ public class Pagamentos {
     }
 
     public Formas_de_Pagamento getFormas_de_Pagamento() {
-        return formas_de_Pagamento;
+        return formas_de_pagamento;
     }
 
     public void setFormas_de_Pagamento(Formas_de_Pagamento formas_de_Pagamento) {
-        this.formas_de_Pagamento = formas_de_Pagamento;
+        this.formas_de_pagamento = formas_de_Pagamento;
     }
 
 }

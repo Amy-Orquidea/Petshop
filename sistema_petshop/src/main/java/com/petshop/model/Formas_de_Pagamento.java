@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,7 +20,7 @@ public class Formas_de_Pagamento {
     private Long id;
     private String nome;
 
-    @OneToMany(mappedBy = "formas", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "formas_de_pagamento", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Pagamentos> pagamentos;
 
     // constructors
