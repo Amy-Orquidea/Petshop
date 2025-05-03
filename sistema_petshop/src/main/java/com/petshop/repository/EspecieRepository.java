@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.petshop.model.Especie;
 
 @Repository
-public interface EspecieRepository extends JpaRepository<Especie, Long> {}
+public interface EspecieRepository extends JpaRepository<Especie, Long> {
+}

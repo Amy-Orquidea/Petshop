@@ -16,13 +16,12 @@ import com.petshop.services.ProdutoService;
 
 @Controller
 public class EstoqueController {
-    
-   @Autowired
+
+    @Autowired
     private EstoqueService estoqueService;
 
     @Autowired
     private ProdutoService produtoService;
-
 
     @GetMapping("/estoques")
     public String listarEstoque(Model model) {
@@ -41,14 +40,15 @@ public class EstoqueController {
         estoqueService.excluirEstoquePorId(id);
         return "redirect:/estoques";
     }
- @PostMapping("/estoques")
-    public String salvarestoque(@ModelAttribute Estoque estoque, Model model, @RequestParam("produtoId") Long produtoId) {
-        Produto produto = produtoService.buscarPorId(produtoId)
-        .orElseThrow(() -> new IllegalArgumentException("produto inválido: " + produtoId));
-estoque.setProduto(produto);
+
+    @PostMapping("/estoques")
+    public String salvarestoque(@ModelAttribute Estoque estoque, Model model,
+            @RequestParam("produtoId") Long produtoId) {
+        Produto produto = produtoService.buscarPorId(produtoId);
+        estoque.setProduto(produto);
         estoqueService.salvarEstoque(estoque);
         model.addAttribute("estoques", estoqueService.buscarTudoNoEstoque());
         return "redirect:/estoques";
     }
-    
+
 }

@@ -11,10 +11,10 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="vendedores")
+@Table(name = "vendedores")
 public class Vendedor {
 
-// Declaração das variáveis
+    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,13 +22,14 @@ public class Vendedor {
     private String email;
     private String telefone;
     private String endereco;
-    private String fotoPath;  // Caminho da imagem
+    private String fotoPath; // Caminho da imagem
 
     @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Itens_de_Pedidos> itens_de_pedidos;
 
-// Construtores
-    public Vendedor(){}
+    // Construtores
+    public Vendedor() {
+    }
 
     public Vendedor(String nome, String email, String telefone) {
         this.nome = nome;
@@ -36,54 +37,42 @@ public class Vendedor {
         this.telefone = telefone;
     }
 
-    
-// Getters and Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }
-
 
     public void setId(Long id) {
         this.id = id;
     }
 
-
     public String getNome() {
         return nome;
     }
-
 
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-
     public String getEmail() {
         return email;
     }
-
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-
     public String getTelefone() {
         return telefone;
     }
-
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
-
-
     public String getEndereco() {
         return endereco;
     }
-
-
 
     public void setEndereco(String endereco) {
         this.endereco = endereco;
@@ -97,9 +86,4 @@ public class Vendedor {
         this.fotoPath = fotoPath;
     }
 
-
-
-
-
- 
 }

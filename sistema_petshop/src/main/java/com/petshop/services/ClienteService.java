@@ -1,13 +1,14 @@
 package com.petshop.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.petshop.model.Cliente;
 import com.petshop.repository.ClienteRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ClienteService {
@@ -25,8 +26,9 @@ public class ClienteService {
     }
 
     // Buscar um cliente por ID
-    public Optional<Cliente> buscarPorId(Long id) {
-        return clienteRepository.findById(id);
+    public Cliente buscarPorId(Long id) {
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + id));
     }
 
     // Deletar um cliente
@@ -37,10 +39,9 @@ public class ClienteService {
     // Editar cliente (atualizar suas informações)
     public Cliente atualizarCliente(Cliente cliente) {
         if (cliente.getId() != null) {
-            return clienteRepository.save(cliente);  // aqui chamamos o método save acima
+            return clienteRepository.save(cliente); // aqui chamamos o método save acima
         }
         return null;
     }
-
 
 }

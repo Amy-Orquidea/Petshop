@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.petshop.model.Vendedor;
-import com.petshop.services.VendedorService; 
+import com.petshop.services.VendedorService;
 
 @Controller
 public class VendedorController {
@@ -30,7 +30,8 @@ public class VendedorController {
 
     @GetMapping("/vendedores")
     public String listarVendedores(Model model) {
-        model.addAttribute("vendedores", vendedorService.buscarTodosOsVendedores()); // Corrigido o uso de vendedorService
+        model.addAttribute("vendedores", vendedorService.buscarTodosOsVendedores()); // Corrigido o uso de
+                                                                                     // vendedorService
         return "vendedores/lista";
     }
 
@@ -41,14 +42,14 @@ public class VendedorController {
 
     @GetMapping("/vendedores/editar/{id}")
     public String editarVendedor(@PathVariable Long id, Model model) {
-        Vendedor vendedor = vendedorService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID vendedor inválido: " + id));
+        Vendedor vendedor = vendedorService.buscarPorId(id);
         model.addAttribute("vendedor", vendedor);
         return "vendedores/editar"; // Corrigido a rota para "vendedores/editar"
     }
 
     @PostMapping("/vendedores/editar/{id}")
     public String atualizarVendedor(@PathVariable Long id, @ModelAttribute Vendedor vendedorAtualizado) {
-        Vendedor vendedor = vendedorService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID vendedor inválido: " + id));
+        Vendedor vendedor = vendedorService.buscarPorId(id);
         vendedor.setNome(vendedorAtualizado.getNome());
         vendedor.setEmail(vendedorAtualizado.getEmail());
         vendedor.setTelefone(vendedorAtualizado.getTelefone());
@@ -64,9 +65,10 @@ public class VendedorController {
     }
 
     @PostMapping("/vendedores")
-    public String salvarVendedor(@ModelAttribute Vendedor vendedor, @RequestParam("foto") MultipartFile foto) throws IOException {
+    public String salvarVendedor(@ModelAttribute Vendedor vendedor, @RequestParam("foto") MultipartFile foto)
+            throws IOException {
         if (!foto.isEmpty()) {
-            String nomeArquivo = foto.getOriginalFilename();  // adicionar uma chave tipo data e hora
+            String nomeArquivo = foto.getOriginalFilename(); // adicionar uma chave tipo data e hora
             Path caminho = Paths.get(imagesPath + nomeArquivo);
             Files.copy(foto.getInputStream(), caminho);
             vendedor.setFotoPath(caminho.toString());

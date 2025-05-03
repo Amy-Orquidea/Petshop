@@ -11,26 +11,27 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="especies")
+@Table(name = "especies")
 public class Especie {
 
-// Declaração das variáveis
+    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
-    
-    
+
     @OneToMany(mappedBy = "especie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Raca> raca;
 
     // Construtores
-    public Especie(){}
+    public Especie() {
+    }
 
     public Especie(String nome) {
         this.nome = nome;
     }
-    //getters and setters
+
+    // getters and setters
     public Long getId() {
         return id;
     }

@@ -13,16 +13,16 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="produtos")
+@Table(name = "produtos")
 public class Produto {
 
-// Declaração das variáveis
+    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private double preco;
-    private String fotoPath;  // Caminho da imagem
+    private String fotoPath; // Caminho da imagem
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
@@ -33,14 +33,15 @@ public class Produto {
 
     @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Itens_de_Pedidos> itens_de_pedidos;
-// Construtores
-    public Produto() {}
+
+    // Construtores
+    public Produto() {
+    }
 
     public Produto(String nome, double preco) {
         this.nome = nome;
         this.preco = preco;
     }
-
 
     // Getters and Setters
 
@@ -83,5 +84,5 @@ public class Produto {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
- 
+
 }

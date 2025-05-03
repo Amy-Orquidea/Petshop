@@ -1,13 +1,14 @@
 package com.petshop.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.petshop.model.Pedido;
 import com.petshop.repository.PedidoRepository;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class PedidoService {
@@ -23,12 +24,13 @@ public class PedidoService {
     // diferença entre salvar e editar é que se salvar passando o id atualiza
     // salvar sem id o banco de dado vai gerar um registro novo do pedido
     public void salvarPedido(Pedido pedido) {
-        pedidoRepository.save(pedido); 
+        pedidoRepository.save(pedido);
     }
 
     // Buscar um pedido por ID no JPA Repository
-    public Optional<Pedido> buscarPorId(Long id) {
-        return pedidoRepository.findById(id);
+    public Pedido buscarPorId(Long id) {
+        return pedidoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + id));
     }
 
     // Deletar um pedido por ID no JPA Repository
@@ -39,10 +41,9 @@ public class PedidoService {
     // Editar pedido (atualizar suas informações)
     public Pedido atualizarPedido(Pedido pedido) {
         if (pedido.getId() != null) {
-            return pedidoRepository.save(pedido);  // aqui chamamos o método save acima
+            return pedidoRepository.save(pedido); // aqui chamamos o método save acima
         }
         return null;
     }
-
 
 }

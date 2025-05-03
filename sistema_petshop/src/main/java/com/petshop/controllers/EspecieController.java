@@ -1,7 +1,5 @@
 package com.petshop.controllers;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -19,8 +17,6 @@ public class EspecieController {
 
     @Autowired
     private EspecieService especieService;
-    
-   
 
     @GetMapping("/especies")
     public String listarEspecie(Model model) {
@@ -33,18 +29,17 @@ public class EspecieController {
         return "especies/cadastro";
     }
 
-
     @GetMapping("/especies/editar/{id}")
     public String editarEspecie(@PathVariable Long id, Model model) {
-        Especie especie = especieService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID espécie inválido: " + id));
+        Especie especie = especieService.buscarPorId(id);
         model.addAttribute("especie", especie);
         return "especies/editar";
     }
 
     @PostMapping("/especies/editar/{id}")
     public String atualizarEspecie(@PathVariable Long id, @ModelAttribute Especie especieAtualizado) {
-       Especie especie = especieService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID espécie inválido: " + id));
-       especie.setId(especieAtualizado.getId());
+        Especie especie = especieService.buscarPorId(id);
+        especie.setId(especieAtualizado.getId());
         especie.setNome(especieAtualizado.getNome());
         especieService.salvarEspecie(especie);
         return "redirect:/especies";
@@ -55,11 +50,11 @@ public class EspecieController {
         especieService.excluirEspeciePorId(id);
         return "redirect:/especies";
     }
- @PostMapping("/especies")
+
+    @PostMapping("/especies")
     public String salvarEspecie(@ModelAttribute Especie especie) {
         especieService.salvarEspecie(especie);
         return "redirect:/especies";
     }
-   
 
 }

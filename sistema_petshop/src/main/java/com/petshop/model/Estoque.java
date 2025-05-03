@@ -2,7 +2,6 @@ package com.petshop.model;
 
 import java.time.LocalDateTime;
 
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
@@ -14,23 +13,24 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="estoque")
+@Table(name = "estoque")
 public class Estoque {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime data_entrada;
     private String nota_de_entrada;
     private int quantidade;
     private int valor_de_entrada;
 
     @ManyToOne
-        @JoinColumn(name = "produto_id", nullable = false)
-        private Produto produto;
-    
-    //constructors
-    public Estoque() {}
+    @JoinColumn(name = "produto_id", nullable = false)
+    private Produto produto;
+
+    // constructors
+    public Estoque() {
+    }
 
     public Estoque(Long id, LocalDateTime data_entrada, String nota_de_entrada, int quantidade, int valor_de_entrada,
             Produto produto) {
@@ -89,7 +89,5 @@ public class Estoque {
     public void setProduto(Produto produto) {
         this.produto = produto;
     }
-
-    
 
 }

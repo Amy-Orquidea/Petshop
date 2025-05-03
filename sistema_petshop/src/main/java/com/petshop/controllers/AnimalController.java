@@ -30,13 +30,12 @@ public class AnimalController {
 
     @Autowired
     private AnimalService animalService;
-    
+
     @Autowired
     private ClienteService clienteService; // Injetando o serviço de Cliente
 
     @Autowired
-    private RacaService racaService;  // Injetando o serviço de Cliente
-
+    private RacaService racaService; // Injetando o serviço de Cliente
 
     @Value("${imagens.animais.path}")
     private String imagesPath;
@@ -56,14 +55,13 @@ public class AnimalController {
     }
 
     @PostMapping
-    public String salvarAnimal(@ModelAttribute Animal animal, 
-                               @RequestParam("foto") MultipartFile foto, 
-                               @RequestParam("clienteId") Long clienteId,
-                               @RequestParam("racaId") Long racaId) throws IOException {
-        Cliente cliente = clienteService.buscarPorId(clienteId)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente inválido: " + clienteId));
+    public String salvarAnimal(@ModelAttribute Animal animal,
+            @RequestParam("foto") MultipartFile foto,
+            @RequestParam("clienteId") Long clienteId,
+            @RequestParam("racaId") Long racaId) throws IOException {
+        Cliente cliente = clienteService.buscarPorId(clienteId);
         animal.setCliente(cliente); // Associa o animal ao cliente
-        Raca raca = racaService.buscarPorId(racaId).orElseThrow(() -> new IllegalArgumentException("Cliente inválido: " + clienteId));
+        Raca raca = racaService.buscarPorId(racaId);
         animal.setRaca(raca);
 
         if (!foto.isEmpty()) {
@@ -79,24 +77,19 @@ public class AnimalController {
 
     @GetMapping("/editar/{id}")
     public String editarAnimal(@PathVariable Long id, Model model) {
-        Animal animal = animalService.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
-        
+        Animal animal = animalService.buscarPorId(id);
         model.addAttribute("animal", animal);
         model.addAttribute("clientes", clienteService.buscarTodosOsClientes()); // Permite alterar o cliente
         return "animais/editar";
     }
 
     @PostMapping("/editar/{id}")
-    public String atualizarAnimal(@PathVariable Long id, 
-                                  @ModelAttribute Animal animalAtualizado, 
-                                  @RequestParam("clienteId") Long clienteId) {
-        Animal animal = animalService.buscarPorId(id)
-                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
-        
-        Cliente cliente = clienteService.buscarPorId(clienteId)
-                .orElseThrow(() -> new IllegalArgumentException("Cliente inválido: " + clienteId));
-        
+    public String atualizarAnimal(@PathVariable Long id,
+            @ModelAttribute Animal animalAtualizado,
+            @RequestParam("clienteId") Long clienteId) {
+        Animal animal = animalService.buscarPorId(id);
+
+        Cliente cliente = clienteService.buscarPorId(clienteId);
         animal.setNome(animalAtualizado.getNome());
         animal.setRaca(animalAtualizado.getRaca());
         animal.setIdade(animalAtualizado.getIdade());

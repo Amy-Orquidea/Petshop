@@ -1,7 +1,5 @@
 package com.petshop.controllers;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -22,8 +20,8 @@ public class RacaController {
 
     @Autowired
     private RacaService racaService;
-    
-   @Autowired
+
+    @Autowired
     private EspecieService especieService;
 
     @GetMapping("/racas")
@@ -38,21 +36,20 @@ public class RacaController {
         return "racas/cadastro";
     }
 
-
     @GetMapping("/racas/editar/{id}")
     public String editarRaca(@PathVariable Long id, Model model) {
-        Raca raca = racaService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID raça inválido: " + id));
+        Raca raca = racaService.buscarPorId(id);
         model.addAttribute("raca", raca);
         model.addAttribute("especies", especieService.buscarTodasAsEspecies());
         return "racas/editar";
     }
 
     @PostMapping("/racas/editar/{id}")
-    public String atualizarRaca(@PathVariable Long id, @ModelAttribute Raca racaAtualizado, @RequestParam("especieId") Long especieId) {
-       Raca raca = racaService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID raça inválido: " + id));
-       Especie especie = especieService.buscarPorId(especieId)
-                .orElseThrow(() -> new IllegalArgumentException("Espécie inválido: " + especieId));
-       raca.setId(racaAtualizado.getId());
+    public String atualizarRaca(@PathVariable Long id, @ModelAttribute Raca racaAtualizado,
+            @RequestParam("especieId") Long especieId) {
+        Raca raca = racaService.buscarPorId(id);
+        Especie especie = especieService.buscarPorId(especieId);
+        raca.setId(racaAtualizado.getId());
         raca.setNome(racaAtualizado.getNome());
         raca.setEspecie(especie);
         racaService.salvarRaca(raca);
@@ -64,14 +61,13 @@ public class RacaController {
         racaService.excluirRacaPorId(id);
         return "redirect:/racas";
     }
- @PostMapping("/racas")
+
+    @PostMapping("/racas")
     public String salvarracas(@ModelAttribute Raca raca, @RequestParam("especieId") Long especieId) {
-        Especie especie = especieService.buscarPorId(especieId)
-        .orElseThrow(() -> new IllegalArgumentException("Raça inválido: " + especieId));
-raca.setEspecie(especie);
+        Especie especie = especieService.buscarPorId(especieId);
+        raca.setEspecie(especie);
         racaService.salvarRaca(raca);
         return "redirect:/racas";
     }
-   
 
 }

@@ -1,10 +1,13 @@
 package com.petshop.model;
 
 import java.io.Serializable;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -13,8 +16,11 @@ import jakarta.persistence.Table;
 @Table(name = "itens_de_pedidos")
 public class Itens_de_Pedidos implements Serializable {
 
-    @EmbeddedId
-    private ItensDePedidosId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private int quantidade;
+    private double desconto;
 
     @ManyToOne
     @JoinColumn(name = "fk_vendedores_id", insertable = false, updatable = false)
@@ -36,12 +42,27 @@ public class Itens_de_Pedidos implements Serializable {
     @JoinColumn(name = "fk_pedidos_numero_pedido", insertable = false, updatable = false)
     private Pedido pedido;
 
+    public Itens_de_Pedidos() {
+    }
+
+    public Itens_de_Pedidos(Long id, int quantidade, double desconto, Vendedor vendedor, Produto produto,
+            Cliente cliente, Animal animal, Pedido pedido) {
+        this.id = id;
+        this.quantidade = quantidade;
+        this.desconto = desconto;
+        this.vendedor = vendedor;
+        this.produto = produto;
+        this.cliente = cliente;
+        this.animal = animal;
+        this.pedido = pedido;
+    }
+
     // Getters e setters, equals e hashCode
-    public ItensDePedidosId getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(ItensDePedidosId id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -83,6 +104,22 @@ public class Itens_de_Pedidos implements Serializable {
 
     public void setPedido(Pedido pedido) {
         this.pedido = pedido;
+    }
+
+    public int getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public double getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(double desconto) {
+        this.desconto = desconto;
     }
 }
 

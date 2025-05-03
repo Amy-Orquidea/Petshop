@@ -1,34 +1,36 @@
 package com.petshop.model;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="formas_de_pagamento")
+@Table(name = "formas_de_pagamento")
 public class Formas_de_Pagamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String descricao;
+    private String nome;
 
-      @ManyToOne
-        @JoinColumn(name = "pagamento_id", insertable = false, updatable = false)
-        private Pagamentos pagamentos;
+    @OneToMany(mappedBy = "formas", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Pagamentos> pagamentos;
 
-    //constructors
-    public Formas_de_Pagamento() {}
-
-    public Formas_de_Pagamento(String descricao) {
-        this.descricao = descricao;
+    // constructors
+    public Formas_de_Pagamento() {
     }
 
-    //getters and setters
+    public Formas_de_Pagamento(String nome) {
+        this.nome = nome;
+    }
+
+    // getters and setters
     public Long getId() {
         return id;
     }
@@ -37,12 +39,12 @@ public class Formas_de_Pagamento {
         this.id = id;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getNome() {
+        return nome;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
-    
+
 }

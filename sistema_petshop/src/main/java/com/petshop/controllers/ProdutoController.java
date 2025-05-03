@@ -28,7 +28,7 @@ public class ProdutoController {
 
     @Autowired
     private CategoriaService categoriaService;
-    
+
     @Value("${imagens.produtos.path}")
     private String imagesPath;
 
@@ -44,10 +44,9 @@ public class ProdutoController {
         return "produtos/cadastro";
     }
 
-
     @GetMapping("/produtos/editar/{id}")
     public String editarProduto(@PathVariable Long id, Model model) {
-        Produto produto = produtoService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID produto inválido: " + id));
+        Produto produto = produtoService.buscarPorId(id);
         model.addAttribute("produto", produto);
         model.addAttribute("categorias", categoriaService.buscarTodosAsCategorias());
         return "produtos/editar";
@@ -55,7 +54,7 @@ public class ProdutoController {
 
     @PostMapping("/produtos/editar/{id}")
     public String atualizarProduto(@PathVariable Long id, @ModelAttribute Produto produtoAtualizado) {
-        Produto produto = produtoService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID produto inválido: " + id));
+        Produto produto = produtoService.buscarPorId(id);
         produto.setNome(produtoAtualizado.getNome());
         produto.setPreco(produtoAtualizado.getPreco());
         produtoService.salvarProduto(produto);
@@ -68,15 +67,17 @@ public class ProdutoController {
         return "redirect:/produtos";
     }
 
-    // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o método isEmpty()
+    // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o
+    // método isEmpty()
     @PostMapping("/produtos")
-    public String salvarproduto(@ModelAttribute Produto produto, @RequestParam("foto") MultipartFile foto) throws IOException {
+    public String salvarproduto(@ModelAttribute Produto produto, @RequestParam("foto") MultipartFile foto)
+            throws IOException {
         if (!foto.isEmpty()) {
-            String nomeArquivo = foto.getOriginalFilename();  // adicionar uma chave tipo data e hora
+            String nomeArquivo = foto.getOriginalFilename(); // adicionar uma chave tipo data e hora
             Path caminho = Paths.get(imagesPath + nomeArquivo);
             Files.copy(foto.getInputStream(), caminho);
             produto.setFotoPath("imagens/produtos/" + nomeArquivo);
-        }   
+        }
         produtoService.salvarProduto(produto);
         return "redirect:/produtos";
     }

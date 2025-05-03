@@ -15,11 +15,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-@Entity                 // Vincula variáveis desta classe às colunas na tabela do banco de dados
-@Table(name="animais")  // usado quando o nome da tabela é diferente da classe
+@Entity // Vincula variáveis desta classe às colunas na tabela do banco de dados
+@Table(name = "animais") // usado quando o nome da tabela é diferente da classe
 public class Animal {
 
-// Declaração das variáveis
+    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,7 +27,7 @@ public class Animal {
     private int idade;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date data_de_nascimento;
-    private String fotoPath;  // Caminho da imagem
+    private String fotoPath; // Caminho da imagem
 
     public Date getData_de_nascimento() {
         return data_de_nascimento;
@@ -53,18 +53,19 @@ public class Animal {
     @JoinColumn(name = "raca_id", nullable = false)
     private Raca raca;
 
-        @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Itens_de_Pedidos> itens_de_pedidos;
 
-// Construtores
-    public Animal() {}
+    // Construtores
+    public Animal() {
+    }
 
     public Animal(String nome, int idade) {
         this.nome = nome;
         this.idade = idade;
     }
 
-// Getters and Setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -147,6 +148,4 @@ public class Animal {
         this.itens_de_pedidos = itens_de_pedidos;
     }
 
-    
- 
 }

@@ -38,17 +38,17 @@ public class ClienteController {
     public String exibirFormularioCadastro() {
         return "clientes/cadastro";
     }
-    
-   @GetMapping("/clientes/editar/{id}")
+
+    @GetMapping("/clientes/editar/{id}")
     public String editarCliente(@PathVariable Long id, Model model) {
-        Cliente cliente = clienteService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID cliente inválido: " + id));
+        Cliente cliente = clienteService.buscarPorId(id);
         model.addAttribute("cliente", cliente);
         return "clientes/editar";
     }
 
     @PostMapping("/clientes/editar/{id}")
     public String atualizarCliente(@PathVariable Long id, @ModelAttribute Cliente clienteAtualizado) {
-        Cliente cliente = clienteService.buscarPorId(id).orElseThrow(() -> new IllegalArgumentException("ID cliente inválido: " + id));
+        Cliente cliente = clienteService.buscarPorId(id);
         cliente.setNome(clienteAtualizado.getNome());
         cliente.setEmail(clienteAtualizado.getEmail());
         cliente.setTelefone(clienteAtualizado.getTelefone());
@@ -63,12 +63,13 @@ public class ClienteController {
         return "redirect:/clientes";
     }
 
-    
-    // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o método isEmpty()
+    // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o
+    // método isEmpty()
     @PostMapping("/clientes")
-    public String salvarCliente(@ModelAttribute Cliente cliente, @RequestParam("foto") MultipartFile foto) throws IOException {
+    public String salvarCliente(@ModelAttribute Cliente cliente, @RequestParam("foto") MultipartFile foto)
+            throws IOException {
         if (!foto.isEmpty()) {
-            String nomeArquivo = foto.getOriginalFilename();  // adicionar uma chave tipo data e hora
+            String nomeArquivo = foto.getOriginalFilename(); // adicionar uma chave tipo data e hora
             Path caminho = Paths.get(imagesPath + nomeArquivo);
             Files.copy(foto.getInputStream(), caminho);
             cliente.setFotoPath("imagens/clientes/" + nomeArquivo);

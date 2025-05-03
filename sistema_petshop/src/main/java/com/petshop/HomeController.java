@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.petshop.services.ProdutoService;
 
-
-
 @Controller
 @RequestMapping("/")
 public class HomeController {
@@ -17,11 +15,10 @@ public class HomeController {
     @Autowired
     private ProdutoService produtoService;
 
-    @GetMapping ("/home")
+    @GetMapping("/home")
     public String home(Model model) {
         model.addAttribute("produtos", produtoService.buscarTodosOsProdutos());
         return "index";
     }
-    
 
 }
