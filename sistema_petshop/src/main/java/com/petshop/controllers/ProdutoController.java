@@ -73,10 +73,10 @@ public class ProdutoController {
     public String salvarproduto(@ModelAttribute Produto produto, @RequestParam("foto") MultipartFile foto)
             throws IOException {
         if (!foto.isEmpty()) {
-            String nomeArquivo = foto.getOriginalFilename(); // adicionar uma chave tipo data e hora
+            String nomeArquivo = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
             Path caminho = Paths.get(imagesPath + nomeArquivo);
             Files.copy(foto.getInputStream(), caminho);
-            produto.setFotoPath("imagens/produtos/" + nomeArquivo);
+            produto.setFotoPath("imagens/clientes/" + nomeArquivo);
         }
         produtoService.salvarProduto(produto);
         return "redirect:/produtos";

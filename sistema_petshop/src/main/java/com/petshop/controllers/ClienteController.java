@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.petshop.comum.BibliotecaDeMetodosComunsAoSistema;
 import com.petshop.model.Cliente;
 import com.petshop.services.ClienteService;
 
@@ -65,16 +68,36 @@ public class ClienteController {
 
     // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o
     // método isEmpty()
-    @PostMapping("/clientes")
-    public String salvarCliente(@ModelAttribute Cliente cliente, @RequestParam("foto") MultipartFile foto)
-            throws IOException {
-        if (!foto.isEmpty()) {
-            String nomeArquivo = foto.getOriginalFilename(); // adicionar uma chave tipo data e hora
-            Path caminho = Paths.get(imagesPath + nomeArquivo);
-            Files.copy(foto.getInputStream(), caminho);
-            cliente.setFotoPath("imagens/clientes/" + nomeArquivo);
+    @PostMapping("/clientes") // Salvar no POST /clientes
+    public String salvarCliente(@ModelAttribute Cliente cliente,
+            @RequestParam("foto") MultipartFile foto,
+            RedirectAttributes redirectAttributes) { // Usar RedirectAttributes
+        try {
+            if (!foto.isEmpty()) {
+                String nomeUUID = UUID.randomUUID().toString().replace("-", "");
+                Path diretorioPath = Paths.get(imagesPath);
+                Files.createDirectories(diretorioPath);
+                Path caminhoArquivo = diretorioPath.resolve(nomeUUID);
+                Files.copy(foto.getInputStream(), caminhoArquivo);
+                
+                // Salva o caminho no banco removendo src\main\resources\static\
+                cliente.setFotoPath(BibliotecaDeMetodosComunsAoSistema.caminhoDasImagensWeb(caminhoArquivo.toString()));
+            }
+            // O service fará a lógica de criar novo
+            clienteService.salvarCliente(cliente);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente salvo com sucesso!");
+            return "redirect:/clientes";
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar a foto do cliente.");
+            // Logar erro
+            // model.addAttribute("cliente", cliente); // Devolve o objeto com erro para o
+            // form
+            return "clientes/cadastro"; // Volta para o form de cadastro
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar cliente: " + e.getMessage());
+            // Logar erro
+            // model.addAttribute("cliente", cliente);
+            return "clientes/cadastro";
         }
-        clienteService.salvarCliente(cliente);
-        return "redirect:/clientes";
     }
-}
+    }

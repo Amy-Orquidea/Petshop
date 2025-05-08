@@ -68,10 +68,10 @@ public class VendedorController {
     public String salvarVendedor(@ModelAttribute Vendedor vendedor, @RequestParam("foto") MultipartFile foto)
             throws IOException {
         if (!foto.isEmpty()) {
-            String nomeArquivo = foto.getOriginalFilename(); // adicionar uma chave tipo data e hora
+            String nomeArquivo = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
             Path caminho = Paths.get(imagesPath + nomeArquivo);
             Files.copy(foto.getInputStream(), caminho);
-            vendedor.setFotoPath(caminho.toString());
+            vendedor.setFotoPath("imagens/clientes/" + nomeArquivo);
         }
         vendedorService.salvarVendedor(vendedor); // Corrigido método de salvar
         return "redirect:/vendedores";
