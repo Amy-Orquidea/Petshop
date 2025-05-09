@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.petshop.model.Cliente;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
 }

@@ -28,13 +28,13 @@ public class PedidoService {
     }
 
     // Buscar um pedido por ID no JPA Repository
-    public Pedido buscarPorId(Long id) {
+    public Pedido buscarPorId(Integer id) {
         return pedidoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + id));
     }
 
     // Deletar um pedido por ID no JPA Repository
-    public void excluirPedidoPorId(Long id) {
+    public void excluirPedidoPorId(Integer id) {
         pedidoRepository.deleteById(id);
     }
 

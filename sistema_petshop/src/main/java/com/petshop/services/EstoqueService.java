@@ -24,12 +24,12 @@ public class EstoqueService {
         estoqueRepository.save(estoque);
     }
 
-    public Estoque buscarPorId(Long id) {
+    public Estoque buscarPorId(Integer id) {
         return estoqueRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Estoque não encontrado com ID: " + id));
     }
 
-    public void excluirEstoquePorId(Long id) {
+    public void excluirEstoquePorId(Integer id) {
         estoqueRepository.deleteById(id);
     }
 

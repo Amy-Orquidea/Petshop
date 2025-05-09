@@ -1,11 +1,10 @@
 package com.petshop.model;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,28 +21,16 @@ public class Animal {
     // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
+    @Column(length = 150)
     private String nome;
-    private int idade;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
-    private Date data_de_nascimento;
+
+    @Column(name = "data_de_nascimento")
+    private LocalDateTime dataDeNascimento;
+
     private String fotoPath; // Caminho da imagem
 
-    public Date getData_de_nascimento() {
-        return data_de_nascimento;
-    }
-
-    public void setData_de_nascimento(Date data_de_nascimento) {
-        this.data_de_nascimento = data_de_nascimento;
-    }
-
-    public Raca getRaca() {
-        return raca;
-    }
-
-    public void setRaca(Raca raca) {
-        this.raca = raca;
-    }
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -60,17 +47,20 @@ public class Animal {
     public Animal() {
     }
 
-    public Animal(String nome, int idade) {
+    public Animal(String nome, LocalDateTime dataDeNascimento, String fotoPath, Cliente cliente, Raca raca) {
         this.nome = nome;
-        this.idade = idade;
+        this.dataDeNascimento = dataDeNascimento;
+        this.fotoPath = fotoPath;
+        this.cliente = cliente;
+        this.raca = raca;
     }
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -80,14 +70,6 @@ public class Animal {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public int getIdade() {
-        return idade;
-    }
-
-    public void setIdade(int idade) {
-        this.idade = idade;
     }
 
     public String getFotoPath() {
@@ -105,39 +87,21 @@ public class Animal {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((nome == null) ? 0 : nome.hashCode());
-        result = prime * result + idade;
-        result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-        return result;
+    
+    public LocalDateTime getdataDeNascimento() {
+        return dataDeNascimento;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Animal other = (Animal) obj;
-        if (nome == null) {
-            if (other.nome != null)
-                return false;
-        } else if (!nome.equals(other.nome))
-            return false;
-        if (idade != other.idade)
-            return false;
-        if (cliente == null) {
-            if (other.cliente != null)
-                return false;
-        } else if (!cliente.equals(other.cliente))
-            return false;
-        return true;
+    public void setdataDeNascimento(LocalDateTime dataDeNascimento) {
+        this.dataDeNascimento = dataDeNascimento;
+    }
+
+    public Raca getRaca() {
+        return raca;
+    }
+
+    public void setRaca(Raca raca) {
+        this.raca = raca;
     }
 
     public List<Itens_de_Pedidos> getItens_de_pedidos() {

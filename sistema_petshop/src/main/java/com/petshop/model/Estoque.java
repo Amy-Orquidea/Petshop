@@ -17,11 +17,15 @@ import jakarta.persistence.Table;
 public class Estoque {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime data_entrada;
+
     private String nota_de_entrada;
+
     private int quantidade;
+
     private int valor_de_entrada;
 
     @ManyToOne
@@ -32,7 +36,7 @@ public class Estoque {
     public Estoque() {
     }
 
-    public Estoque(Long id, LocalDateTime data_entrada, String nota_de_entrada, int quantidade, int valor_de_entrada,
+    public Estoque(Integer id, LocalDateTime data_entrada, String nota_de_entrada, int quantidade, int valor_de_entrada,
             Produto produto) {
         this.id = id;
         this.data_entrada = data_entrada;
@@ -42,11 +46,11 @@ public class Estoque {
         this.produto = produto;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

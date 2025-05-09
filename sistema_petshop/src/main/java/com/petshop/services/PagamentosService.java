@@ -24,12 +24,12 @@ public class PagamentosService {
         pagamentosRepository.save(pagamentos);
     }
 
-    public Pagamentos buscarPorId(Long id) {
+    public Pagamentos buscarPorId(Integer id) {
         return pagamentosRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pagamento não encontrado com ID: " + id));
     }
 
-    public void excluirPagamentoPorId(Long id) {
+    public void excluirPagamentoPorId(Integer id) {
         pagamentosRepository.deleteById(id);
     }
 

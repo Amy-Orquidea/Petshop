@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.petshop.model.Estoque;
 
 @Repository
-public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
+public interface EstoqueRepository extends JpaRepository<Estoque, Integer> {
 }

@@ -26,13 +26,13 @@ public class ClienteService {
     }
 
     // Buscar um cliente por ID
-    public Cliente buscarPorId(Long id) {
+    public Cliente buscarPorId(Integer id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com ID: " + id));
     }
 
     // Deletar um cliente
-    public void excluirClientePorId(Long id) {
+    public void excluirClientePorId(Integer id) {
         clienteRepository.deleteById(id);
     }
 

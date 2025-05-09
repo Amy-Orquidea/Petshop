@@ -24,12 +24,12 @@ public class VendedorService {
         vendedorRepository.save(vendedor);
     }
 
-    public Vendedor buscarPorId(Long id) {
+    public Vendedor buscarPorId(Integer id) {
         return vendedorRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vendedor não encontrado com ID: " + id));
     }
 
-    public void excluirVendedorPorId(Long id) {
+    public void excluirVendedorPorId(Integer id) {
         vendedorRepository.deleteById(id);
     }
 

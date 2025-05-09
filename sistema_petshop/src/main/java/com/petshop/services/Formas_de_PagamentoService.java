@@ -24,12 +24,12 @@ public class Formas_de_PagamentoService {
         formas_de_PagamentoRepository.save(formas_de_Pagamento);
     }
 
-    public Formas_de_Pagamento buscarPorId(Long id) {
+    public Formas_de_Pagamento buscarPorId(Integer id) {
         return formas_de_PagamentoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Forma de Pagamento não encontrado com ID: " + id));
     }
 
-    public void excluirFormaPorId(Long id) {
+    public void excluirFormaPorId(Integer id) {
         formas_de_PagamentoRepository.deleteById(id);
     }
 

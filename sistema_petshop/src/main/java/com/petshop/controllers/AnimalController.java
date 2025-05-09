@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.petshop.comum.BibliotecaDeMetodosComunsAoSistema;
 import com.petshop.model.Animal;
 import com.petshop.model.Cliente;
 import com.petshop.model.Raca;
@@ -54,21 +57,31 @@ public class AnimalController {
         return "animais/cadastro";
     }
 
-    @PostMapping
+ @PostMapping
     public String salvarAnimal(@ModelAttribute Animal animal,
+            @RequestParam("racaId") Integer racaId,
             @RequestParam("foto") MultipartFile foto,
-            @RequestParam("clienteId") Long clienteId,
-            @RequestParam("racaId") Long racaId) throws IOException {
+            @RequestParam("clienteId") Integer clienteId,
+            @RequestParam("dataDeNascimento") LocalDateTime dataDeNascimento) throws IOException {
+
         Cliente cliente = clienteService.buscarPorId(clienteId);
-        animal.setCliente(cliente); // Associa o animal ao cliente
-        Raca raca = racaService.buscarPorId(racaId);
-        animal.setRaca(raca);
+        animal.setCliente(cliente); // Seta o Cliente na classe Animal
+
+        Raca raca = racaService.buscarPorId(racaId)
+                .orElseThrow(() -> new IllegalArgumentException("Raca inválida: " + racaId));
+        animal.setRaca(raca); // Seta a Raça na classe Animal
+
+        animal.setDataDeNascimento(dataDeNascimento);
 
         if (!foto.isEmpty()) {
-            String nomeArquivo = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
-            Path caminho = Paths.get(imagesPath + nomeArquivo);
-            Files.copy(foto.getInputStream(), caminho);
-            animal.setFotoPath("imagens/animais/" + nomeArquivo);
+            String nomeUUID = UUID.randomUUID().toString().replace("-", "");
+            Path diretorioPath = Paths.get(imagesPath);
+            Files.createDirectories(diretorioPath);
+            Path caminhoArquivo = diretorioPath.resolve(nomeUUID);
+            Files.copy(foto.getInputStream(), caminhoArquivo);
+
+            // Salva o caminho no banco de dados removendo src\main\resources\static\
+            animal.setFotoPath(BibliotecaDeMetodosComunsAoSistema.caminhoDasImagensWeb(caminhoArquivo.toString()));
         }
 
         animalService.salvarAnimal(animal);
@@ -88,7 +101,6 @@ public class AnimalController {
             @ModelAttribute Animal animalAtualizado,
             @RequestParam("clienteId") Long clienteId) {
         Animal animal = animalService.buscarPorId(id);
-
         Cliente cliente = clienteService.buscarPorId(clienteId);
         animal.setNome(animalAtualizado.getNome());
         animal.setRaca(animalAtualizado.getRaca());

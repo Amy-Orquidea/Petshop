@@ -24,12 +24,12 @@ public class RacaService {
         racaRepository.save(raca);
     }
 
-    public Raca buscarPorId(Long id) {
+    public Raca buscarPorId(Integer id) {
         return racaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Raça não encontrado com ID: " + id));
     }
 
-    public void excluirRacaPorId(Long id) {
+    public void excluirRacaPorId(Integer id) {
         racaRepository.deleteById(id);
     }
 

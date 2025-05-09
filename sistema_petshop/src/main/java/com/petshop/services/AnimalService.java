@@ -26,13 +26,13 @@ public class AnimalService {
     }
 
     // Buscar um animal por ID
-    public Animal buscarPorId(Long id) {
+    public Animal buscarPorId(Integer id) {
         return animalRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vendedor não encontrado com ID: " + id));
     }
 
     // Deletar um animal
-    public void excluirAnimalPorId(Long id) {
+    public void excluirAnimalPorId(Integer id) {
         animalRepository.deleteById(id);
     }
 

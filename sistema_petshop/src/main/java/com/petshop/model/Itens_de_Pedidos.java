@@ -18,7 +18,7 @@ public class Itens_de_Pedidos implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private int quantidade;
     private double desconto;
 
@@ -45,7 +45,7 @@ public class Itens_de_Pedidos implements Serializable {
     public Itens_de_Pedidos() {
     }
 
-    public Itens_de_Pedidos(Long id, int quantidade, double desconto, Vendedor vendedor, Produto produto,
+    public Itens_de_Pedidos(Integer id, int quantidade, double desconto, Vendedor vendedor, Produto produto,
             Cliente cliente, Animal animal, Pedido pedido) {
         this.id = id;
         this.quantidade = quantidade;
@@ -58,11 +58,11 @@ public class Itens_de_Pedidos implements Serializable {
     }
 
     // Getters e setters, equals e hashCode
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

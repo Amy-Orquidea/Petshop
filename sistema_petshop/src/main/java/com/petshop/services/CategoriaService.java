@@ -24,12 +24,12 @@ public class CategoriaService {
         categoriaRepository.save(categoria);
     }
 
-    public Categoria buscarPorId(Long id) {
+    public Categoria buscarPorId(Integer id) {
         return categoriaRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada com ID: " + id));
     }
 
-    public void excluirCategoriaPorId(Long id) {
+    public void excluirCategoriaPorId(Integer id) {
         categoriaRepository.deleteById(id);
     }
 

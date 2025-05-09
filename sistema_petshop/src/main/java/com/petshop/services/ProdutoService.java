@@ -28,13 +28,13 @@ public class ProdutoService {
     }
 
     // Buscar um produto por ID no JPA Repository
-    public Produto buscarPorId(Long id) {
+    public Produto buscarPorId(Integer id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
     }
 
     // Deletar um produto por ID no JPA Repository
-    public void excluirProdutoPorId(Long id) {
+    public void excluirProdutoPorId(Integer id) {
         produtoRepository.deleteById(id);
     }
 

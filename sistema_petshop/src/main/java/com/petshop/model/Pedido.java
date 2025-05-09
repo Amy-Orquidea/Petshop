@@ -20,7 +20,8 @@ public class Pedido {
     // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long numero_pedido;
+    private Integer numero_pedido;
+
     private Calendar dataHora = Calendar.getInstance();
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -34,16 +35,16 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(Long numero_pedido, Calendar dataHora) {
+    public Pedido(Integer numero_pedido, Calendar dataHora) {
         this.numero_pedido = numero_pedido;
         this.dataHora = dataHora;
     }
 
-    public Long getNumeroPedido() {
+    public Integer getNumeroPedido() {
         return numero_pedido;
     }
 
-    public void setNumeroPedido(Long numero_pedido) {
+    public void setNumeroPedido(Integer numero_pedido) {
         this.numero_pedido = numero_pedido;
     }
 

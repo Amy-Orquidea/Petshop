@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.petshop.model.Vendedor;
 
 @Repository
-public interface VendedorRepository extends JpaRepository<Vendedor, Long> {
+public interface VendedorRepository extends JpaRepository<Vendedor, Integer> {
 }

@@ -17,11 +17,16 @@ public class Vendedor {
     // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+
     private String nome;
+
     private String email;
+
     private String telefone;
+
     private String endereco;
+
     private String fotoPath; // Caminho da imagem
 
     @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -38,11 +43,11 @@ public class Vendedor {
     }
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

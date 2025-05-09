@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 public class Pagamentos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private double valor_pago;
 
     @OneToMany(mappedBy = "pagamentos", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -35,11 +35,11 @@ public class Pagamentos {
     }
 
     // getters and setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

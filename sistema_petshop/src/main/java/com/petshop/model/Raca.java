@@ -19,7 +19,8 @@ public class Raca {
     // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+    
     private String nome;
 
     @OneToMany(mappedBy = "raca", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -33,11 +34,11 @@ public class Raca {
     public Raca() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -57,7 +58,7 @@ public class Raca {
         this.especie = especie;
     }
 
-    public Raca(Long id, String nome) {
+    public Raca(Integer id, String nome) {
         this.id = id;
         this.nome = nome;
 

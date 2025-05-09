@@ -24,12 +24,12 @@ public class EspecieService {
         especieRepository.save(especie);
     }
 
-    public Especie buscarPorId(Long id) {
+    public Especie buscarPorId(Integer id) {
         return especieRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Vendedor não encontrado com ID: " + id));
     }
 
-    public void excluirEspeciePorId(Long id) {
+    public void excluirEspeciePorId(Integer id) {
         especieRepository.deleteById(id);
     }
 
