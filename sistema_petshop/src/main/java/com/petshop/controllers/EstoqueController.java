@@ -8,13 +8,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.petshop.model.Estoque;
 import com.petshop.model.Produto;
 import com.petshop.services.EstoqueService;
 import com.petshop.services.ProdutoService;
 
-@Controller
+@Controller("/estoque")
 public class EstoqueController {
 
     @Autowired
@@ -23,32 +24,50 @@ public class EstoqueController {
     @Autowired
     private ProdutoService produtoService;
 
-    @GetMapping("/estoques")
-    public String listarEstoque(Model model) {
-        model.addAttribute("estoques", estoqueService.buscarTudoNoEstoque());
-        return "estoques/lista";
+    @GetMapping
+    public String listarProdutosEmEstoque(Model model) {
+        model.addAttribute("estoque", estoqueService.buscarEstoqueDeProdutos());
+        return "estoque/lista";
     }
 
-    @GetMapping("/estoques/cadastro")
-    public String exibirFormularioCadastro(Model model) {
-        model.addAttribute("produtos", produtoService.buscarTodosOsProdutos()); // Lista de especies para seleção
-        return "estoques/cadastro";
+    @GetMapping("/entrada")
+    public String exibirFormularioCadastro() {
+        return "estoque/entrada";
     }
 
-    @GetMapping("/estoques/deletar/{id}")
-    public String deletarraca(@PathVariable Long id) {
-        estoqueService.excluirEstoquePorId(id);
-        return "redirect:/estoques";
+    @PostMapping("/salvar")
+    public String salvar(@ModelAttribute Produto produto, RedirectAttributes attributes) {
+        produtoService.salvarProduto(produto);
+        attributes.addFlashAttribute("mensagem", "Produto salvo com sucesso!");
+        return "redirect:/produtos";
     }
 
-    @PostMapping("/estoques")
-    public String salvarestoque(@ModelAttribute Estoque estoque, Model model,
-            @RequestParam("produtoId") Long produtoId) {
-        Produto produto = produtoService.buscarPorId(produtoId);
-        estoque.setProduto(produto);
-        estoqueService.salvarEstoque(estoque);
-        model.addAttribute("estoques", estoqueService.buscarTudoNoEstoque());
-        return "redirect:/estoques";
+    @GetMapping("/{id}/editar")
+    public String editar(@PathVariable Integer id, Model model, RedirectAttributes attributes) {
+        Produto produto = produtoService.buscarPorId(id);
+        attributes.addFlashAttribute("mensagemErro", "Produto não encontrado.");
+        return "redirect:/produtos";
+    }
+
+    @GetMapping("/{id}/excluir")
+    public String excluir(@PathVariable Integer id, RedirectAttributes attributes) {
+        try {
+            produtoService.excluirProdutoPorId(id);
+            attributes.addFlashAttribute("mensagem", "Produto excluído com sucesso!");
+        } catch (Exception e) {
+            attributes.addFlashAttribute("mensagemErro", "Erro ao excluir produto: " + e.getMessage());
+        }
+        return "redirect:/produtos";
+    }
+
+    @GetMapping("/{id}/estoque")
+    public String verEstoque(@PathVariable Integer id, Model model, RedirectAttributes attributes) {
+        Produto produto = produtoService.buscarPorId(id);
+        model.addAttribute("produto", produto);
+        model.addAttribute("itensEstoque", estoqueService.buscarTudoNoEstoque(id));
+        model.addAttribute("totalEstoque", estoqueService.getTotalQuantidadePorProduto(id));
+        return "estoque/lista-por-produto";
+
     }
 
 }

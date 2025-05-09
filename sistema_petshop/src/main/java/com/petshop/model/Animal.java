@@ -88,11 +88,11 @@ public class Animal {
         this.cliente = cliente;
     }
     
-    public LocalDateTime getdataDeNascimento() {
+    public LocalDateTime getDataDeNascimento() {
         return dataDeNascimento;
     }
 
-    public void setdataDeNascimento(LocalDateTime dataDeNascimento) {
+    public void setDataDeNascimento(LocalDateTime dataDeNascimento) {
         this.dataDeNascimento = dataDeNascimento;
     }
 

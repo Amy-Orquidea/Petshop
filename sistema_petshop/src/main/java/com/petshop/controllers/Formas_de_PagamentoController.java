@@ -30,14 +30,14 @@ public class Formas_de_PagamentoController {
     }
 
     @GetMapping("/formas/editar/{id}")
-    public String editarEspecie(@PathVariable Long id, Model model) {
+    public String editarEspecie(@PathVariable Integer id, Model model) {
         Formas_de_Pagamento formas_de_Pagamento = formas_de_PagamentoService.buscarPorId(id);
         model.addAttribute("forma", formas_de_Pagamento);
         return "formas/editar";
     }
 
     @PostMapping("/formas/editar/{id}")
-    public String atualizarEspecie(@PathVariable Long id,
+    public String atualizarEspecie(@PathVariable Integer id,
             @ModelAttribute Formas_de_Pagamento formas_de_PagamentoAtualizada) {
         Formas_de_Pagamento formas_de_Pagamento = formas_de_PagamentoService.buscarPorId(id);
         formas_de_Pagamento.setId(formas_de_PagamentoAtualizada.getId());
@@ -47,7 +47,7 @@ public class Formas_de_PagamentoController {
     }
 
     @GetMapping("/formas/deletar/{id}")
-    public String deletarEspecie(@PathVariable Long id) {
+    public String deletarEspecie(@PathVariable Integer id) {
         formas_de_PagamentoService.excluirFormaPorId(id);
         return "redirect:/formas";
     }

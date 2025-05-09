@@ -54,11 +54,11 @@ public class Estoque {
         this.id = id;
     }
 
-    public LocalDateTime getData_entrada() {
+    public LocalDateTime getDataEntrada() {
         return data_entrada;
     }
 
-    public void setData_entrada(LocalDateTime data_entrada) {
+    public void setDataEntrada(LocalDateTime data_entrada) {
         this.data_entrada = data_entrada;
     }
 

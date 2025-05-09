@@ -37,7 +37,7 @@ public class PagamentosController {
     }
 
     @GetMapping("/pagamentos/editar/{id}")
-    public String editarPagamento(@PathVariable Long id, Model model) {
+    public String editarPagamento(@PathVariable Integer id, Model model) {
         Pagamentos pagamentos = pagamentosService.buscarPorId(id);
         model.addAttribute("pagamento", pagamentos);
         model.addAttribute("formas", formas_de_PagamentoService.buscarTodasAsFormas());
@@ -45,8 +45,8 @@ public class PagamentosController {
     }
 
     @PostMapping("/pagamentos/editar/{id}")
-    public String atualizarPagamento(@PathVariable Long id, @ModelAttribute Pagamentos pagamentoAtualizado,
-            @RequestParam("pagamentoId") Long pagamentoId) {
+    public String atualizarPagamento(@PathVariable Integer id, @ModelAttribute Pagamentos pagamentoAtualizado,
+            @RequestParam("pagamentoId") Integer pagamentoId) {
         Pagamentos pagamentos = pagamentosService.buscarPorId(id);
         Formas_de_Pagamento formas_de_Pagamento = formas_de_PagamentoService.buscarPorId(pagamentoId);
         pagamentos.setId(pagamentoAtualizado.getId());
@@ -57,13 +57,13 @@ public class PagamentosController {
     }
 
     @GetMapping("/pagamentos/deletar/{id}")
-    public String deletarPagamento(@PathVariable Long id) {
+    public String deletarPagamento(@PathVariable Integer id) {
         pagamentosService.excluirPagamentoPorId(id);
         return "redirect:/pagamentos";
     }
 
     @PostMapping("/pagamentos")
-    public String salvarPagamento(@ModelAttribute Pagamentos pagamentos, @RequestParam("formaId") Long formaId) {
+    public String salvarPagamento(@ModelAttribute Pagamentos pagamentos, @RequestParam("formaId") Integer formaId) {
         Formas_de_Pagamento formas_de_Pagamento = formas_de_PagamentoService.buscarPorId(formaId);
         pagamentos.setFormas_de_Pagamento(formas_de_Pagamento);
         pagamentosService.salvarPagamento(pagamentos);

@@ -41,14 +41,14 @@ public class VendedorController {
     }
 
     @GetMapping("/vendedores/editar/{id}")
-    public String editarVendedor(@PathVariable Long id, Model model) {
+    public String editarVendedor(@PathVariable Integer id, Model model) {
         Vendedor vendedor = vendedorService.buscarPorId(id);
         model.addAttribute("vendedor", vendedor);
         return "vendedores/editar"; // Corrigido a rota para "vendedores/editar"
     }
 
     @PostMapping("/vendedores/editar/{id}")
-    public String atualizarVendedor(@PathVariable Long id, @ModelAttribute Vendedor vendedorAtualizado) {
+    public String atualizarVendedor(@PathVariable Integer id, @ModelAttribute Vendedor vendedorAtualizado) {
         Vendedor vendedor = vendedorService.buscarPorId(id);
         vendedor.setNome(vendedorAtualizado.getNome());
         vendedor.setEmail(vendedorAtualizado.getEmail());
@@ -59,7 +59,7 @@ public class VendedorController {
     }
 
     @GetMapping("/vendedores/deletar/{id}")
-    public String deletarVendedor(@PathVariable Long id) {
+    public String deletarVendedor(@PathVariable Integer id) {
         vendedorService.excluirVendedorPorId(id);
         return "redirect:/vendedores";
     }

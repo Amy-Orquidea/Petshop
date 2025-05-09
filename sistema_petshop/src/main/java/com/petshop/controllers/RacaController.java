@@ -37,7 +37,7 @@ public class RacaController {
     }
 
     @GetMapping("/racas/editar/{id}")
-    public String editarRaca(@PathVariable Long id, Model model) {
+    public String editarRaca(@PathVariable Integer id, Model model) {
         Raca raca = racaService.buscarPorId(id);
         model.addAttribute("raca", raca);
         model.addAttribute("especies", especieService.buscarTodasAsEspecies());
@@ -45,8 +45,8 @@ public class RacaController {
     }
 
     @PostMapping("/racas/editar/{id}")
-    public String atualizarRaca(@PathVariable Long id, @ModelAttribute Raca racaAtualizado,
-            @RequestParam("especieId") Long especieId) {
+    public String atualizarRaca(@PathVariable Integer id, @ModelAttribute Raca racaAtualizado,
+            @RequestParam("especieId") Integer especieId) {
         Raca raca = racaService.buscarPorId(id);
         Especie especie = especieService.buscarPorId(especieId);
         raca.setId(racaAtualizado.getId());
@@ -57,13 +57,13 @@ public class RacaController {
     }
 
     @GetMapping("/racas/deletar/{id}")
-    public String deletarraca(@PathVariable Long id) {
+    public String deletarraca(@PathVariable Integer id) {
         racaService.excluirRacaPorId(id);
         return "redirect:/racas";
     }
 
     @PostMapping("/racas")
-    public String salvarracas(@ModelAttribute Raca raca, @RequestParam("especieId") Long especieId) {
+    public String salvarracas(@ModelAttribute Raca raca, @RequestParam("especieId") Integer especieId) {
         Especie especie = especieService.buscarPorId(especieId);
         raca.setEspecie(especie);
         racaService.salvarRaca(raca);

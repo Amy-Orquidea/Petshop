@@ -37,7 +37,7 @@ public class PedidoController {
     }
 
     @GetMapping("/pedidos/editar/{id}")
-    public String editarPedido(@PathVariable Long id, Model model) {
+    public String editarPedido(@PathVariable Integer id, Model model) {
         Pedido pedido = pedidoService.buscarPorId(id);
         model.addAttribute("pedido", pedido);
         model.addAttribute("pagamentos", pagamentosService.buscarTodosOsPagamentos());
@@ -45,7 +45,7 @@ public class PedidoController {
     }
 
     @PostMapping("/pedidos/editar/{id}")
-    public String atualizarProduto(@PathVariable Long id, @ModelAttribute Pedido pedidoAtualizado) {
+    public String atualizarProduto(@PathVariable Integer id, @ModelAttribute Pedido pedidoAtualizado) {
         Pedido pedido = pedidoService.buscarPorId(id);
         Pagamentos pagamentos = pagamentosService.buscarPorId(id);
         pedido.setNumeroPedido(pedidoAtualizado.getNumeroPedido());
@@ -56,7 +56,7 @@ public class PedidoController {
     }
 
     @GetMapping("/pedidos/deletar/{id}")
-    public String deletarpedido(@PathVariable Long id) {
+    public String deletarpedido(@PathVariable Integer id) {
         pedidoService.excluirPedidoPorId(id);
         return "redirect:/pedisdos";
     }
@@ -64,7 +64,7 @@ public class PedidoController {
     // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o
     // método isEmpty()
     @PostMapping("/pedidos")
-    public String salvarpedido(@ModelAttribute Pedido pedido, @RequestParam("pagamentoId") Long pagamentoId) {
+    public String salvarpedido(@ModelAttribute Pedido pedido, @RequestParam("pagamentoId") Integer pagamentoId) {
         Pagamentos pagamentos = pagamentosService.buscarPorId(pagamentoId);
         pedido.setPagamentos(pagamentos);
         pedidoService.salvarPedido(pedido);

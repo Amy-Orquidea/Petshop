@@ -57,7 +57,7 @@ public class AnimalController {
         return "animais/cadastro";
     }
 
- @PostMapping
+    @PostMapping
     public String salvarAnimal(@ModelAttribute Animal animal,
             @RequestParam("racaId") Integer racaId,
             @RequestParam("foto") MultipartFile foto,
@@ -67,10 +67,8 @@ public class AnimalController {
         Cliente cliente = clienteService.buscarPorId(clienteId);
         animal.setCliente(cliente); // Seta o Cliente na classe Animal
 
-        Raca raca = racaService.buscarPorId(racaId)
-                .orElseThrow(() -> new IllegalArgumentException("Raca inválida: " + racaId));
+        Raca raca = racaService.buscarPorId(racaId);
         animal.setRaca(raca); // Seta a Raça na classe Animal
-
         animal.setDataDeNascimento(dataDeNascimento);
 
         if (!foto.isEmpty()) {
@@ -89,7 +87,7 @@ public class AnimalController {
     }
 
     @GetMapping("/editar/{id}")
-    public String editarAnimal(@PathVariable Long id, Model model) {
+    public String editarAnimal(@PathVariable Integer id, Model model) {
         Animal animal = animalService.buscarPorId(id);
         model.addAttribute("animal", animal);
         model.addAttribute("clientes", clienteService.buscarTodosOsClientes()); // Permite alterar o cliente
@@ -97,14 +95,16 @@ public class AnimalController {
     }
 
     @PostMapping("/editar/{id}")
-    public String atualizarAnimal(@PathVariable Long id,
+    public String atualizarAnimal(@PathVariable Integer id,
             @ModelAttribute Animal animalAtualizado,
-            @RequestParam("clienteId") Long clienteId) {
+            @RequestParam("clienteId") Integer clienteId) {
         Animal animal = animalService.buscarPorId(id);
+
         Cliente cliente = clienteService.buscarPorId(clienteId);
+
         animal.setNome(animalAtualizado.getNome());
         animal.setRaca(animalAtualizado.getRaca());
-        animal.setIdade(animalAtualizado.getIdade());
+        animal.setDataDeNascimento(animalAtualizado.getDataDeNascimento());
         animal.setCliente(cliente); // Atualiza o cliente do animal
 
         animalService.salvarAnimal(animal);
@@ -112,7 +112,7 @@ public class AnimalController {
     }
 
     @GetMapping("/deletar/{id}")
-    public String deletarAnimal(@PathVariable Long id) {
+    public String deletarAnimal(@PathVariable Integer id) {
         animalService.excluirAnimalPorId(id);
         return "redirect:/animais";
     }

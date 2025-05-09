@@ -1,42 +1,57 @@
 package com.petshop.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.petshop.model.Estoque;
+import com.petshop.model.Produto;
 import com.petshop.repository.EstoqueRepository;
+import com.petshop.repository.ProdutoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class EstoqueService {
-
+    
     @Autowired
-    private EstoqueRepository estoqueRepository;
+    private final EstoqueRepository estoqueRepository;
 
-    public List<Estoque> buscarTudoNoEstoque() {
+    private ProdutoService produtoService;
+
+    public EstoqueService(EstoqueRepository estoqueRepository, ProdutoRepository produtoRepository) {
+        this.estoqueRepository = estoqueRepository;
+    }
+
+    public List<Estoque> buscarEstoqueDeProdutos() {
         return estoqueRepository.findAll();
     }
 
-    public void salvarEstoque(Estoque estoque) {
-        estoqueRepository.save(estoque);
+    public void registrarEntrada(Estoque estoque, Integer produtoId) {
+        Produto produtoOpt = produtoService.buscarPorId(produtoId);
+
+        if (estoque.getDataEntrada() == null) {
+            estoque.setDataEntrada(LocalDateTime.now());
+        }
     }
 
-    public Estoque buscarPorId(Integer id) {
-        return estoqueRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Estoque não encontrado com ID: " + id));
-    }
-
-    public void excluirEstoquePorId(Integer id) {
+    public void excluir(Integer id) {
         estoqueRepository.deleteById(id);
     }
 
-    public Estoque atualizarEstoque(Estoque estoque) {
-        if (estoque.getId() != null) {
-            return estoqueRepository.save(estoque);
+    public List<Estoque> listarPorProduto(Integer produtoId) {
+        Optional<Produto> produtoOpt = produtoRepository.findById(produtoId);
+        if (produtoOpt.isPresent()) {
+            return estoqueRepository.findByProdutoIdOrderByDataEntradaDesc(produtoId);
         }
-        return null;
+        return List.of();
+    }
+
+    public Integer getTotalQuantidadePorProduto(Integer produtoId) {
+        Integer total = estoqueRepository.getTotalQuantidadeByProdutoId(produtoId);
+        return total != null ? total : 0;
     }
 }
