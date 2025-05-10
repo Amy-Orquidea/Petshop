@@ -4,7 +4,6 @@ import com.petshop.model.Especie;
 import com.petshop.repository.EspecieRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

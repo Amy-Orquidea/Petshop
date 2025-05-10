@@ -1,59 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Lista de Vendedores</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link href="../css/estilo.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        .amy{
-    padding-left: 70px; 
-    padding-right: 70px; 
-    border-color: #008B8B; 
-    background-color: #008B8B; 
-    color: white;
-    font-size: medium; 
-}
- #botao{
-    background-color: #008B8B; 
-    color: black; margin-left: 245px; 
-    padding-left: 15px; 
-    padding-right: 15px;    
-    font-size: xx-large; 
-    border: #008B8B;
- }
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/estilo.css" rel="stylesheet">
+
     </style>
 </head>
+
 <body>
     <div th:replace="fragmentos/menu-lateral :: sidebar"></div>
     <div class="centralizado" id="main">
-<div class="container">
-    <h2>Lista de Vendedores</h2>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Telefone</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="vendedor : ${vendedores}">
-                <td th:text="${vendedor.nome}"></td>
-                <td th:text="${vendedor.email}"></td>
-                <td th:text="${vendedor.telefone}"></td>
-                <td>
-                    <a th:href="@{'/vendedores/editar/' + ${vendedor.id}}" class="btn btn-warning btn-sm">Editar</a>
-                    <a th:href="@{'/vendedores/deletar/' + ${vendedor.id}}" class="btn btn-danger btn-sm" onclick="return confirm('Deseja realmente excluir este Vendedor?');">Excluir</a>
-                     
-                 </td>
-            </tr>
-        </tbody>
-    </table>
-    <a href="/vendedores/cadastro" class="btn btn-primary">Novo Vendedor</a>
-</div>
+        <div class="container">
+            <h2>Lista de Vendedores</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="vendedor : ${vendedores}">
+                        <td th:text="${vendedor.nome}"></td>
+                        <td th:text="${vendedor.email}"></td>
+                        <td th:text="${vendedor.telefone}"></td>
+                        <td>
+                            <a th:href="@{'/vendedores/editar/' + ${vendedor.id}}"
+                                class="btn btn-warning btn-sm">Editar</a>
+                            <a th:href="@{'/vendedores/deletar/' + ${vendedor.id}}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Deseja realmente excluir este Vendedor?');">Excluir</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <a href="/vendedores/cadastro" class="btn btn-primary">Novo Vendedor</a>
+        </div>
 </body>
+
 </html>
