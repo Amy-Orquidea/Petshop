@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -24,7 +25,8 @@ import com.petshop.services.ClienteService;
 
 import jakarta.persistence.EntityNotFoundException;
 
-@Controller("/clientes")
+@Controller
+@RequestMapping("/clientes") // Adicionar RequestMapping a nível de classe
 public class ClienteController {
 
     @Autowired
@@ -40,7 +42,7 @@ public class ClienteController {
     }
 
     @GetMapping("/cadastro")
-    public String exibirFormularioCadastro(Model model) {
+    public String exibirFormularioCadastro(Model model) { // Adicionar Model
         model.addAttribute("cliente", new Cliente()); // Adicionar objeto vazio ao Model
         return "clientes/cadastro";
     }
@@ -98,21 +100,6 @@ public class ClienteController {
         }
     }
 
-    @GetMapping("/deletar/{id}")
-    public String deletarCliente(@PathVariable Integer id, RedirectAttributes redirectAttributes) { // Usar Integer
-        try {
-            // Opcional: Excluir foto
-            clienteService.excluirClientePorId(id);
-            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente excluído com sucesso!");
-        } catch (Exception e) { // Captura EntityNotFound e outras
-            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir cliente: " + e.getMessage());
-            // Logar erro
-        }
-        return "redirect:/clientes";
-    }
-
-    // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o
-    // método isEmpty()
     @PostMapping // Salvar no POST /clientes
     public String salvarCliente(@ModelAttribute Cliente cliente,
             @RequestParam("foto") MultipartFile foto,
@@ -144,5 +131,18 @@ public class ClienteController {
             // model.addAttribute("cliente", cliente);
             return "clientes/cadastro";
         }
+    }
+
+    @GetMapping("/deletar/{id}")
+    public String deletarCliente(@PathVariable Integer id, RedirectAttributes redirectAttributes) { // Usar Integer
+        try {
+            // Opcional: Excluir foto
+            clienteService.excluirClientePorId(id);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Cliente excluído com sucesso!");
+        } catch (Exception e) { // Captura EntityNotFound e outras
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao excluir cliente: " + e.getMessage());
+            // Logar erro
+        }
+        return "redirect:/clientes";
     }
 }

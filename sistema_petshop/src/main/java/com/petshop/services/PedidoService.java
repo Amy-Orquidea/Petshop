@@ -1,49 +1,54 @@
 package com.petshop.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.petshop.model.Pedido;
 import com.petshop.repository.PedidoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PedidoService {
 
-    @Autowired
-    private PedidoRepository pedidoRepository;
+    private final PedidoRepository pedidoRepository;
 
-    // Listar todos os pedidos
+    public PedidoService(PedidoRepository pedidoRepository) {
+        this.pedidoRepository = pedidoRepository;
+    }
+
     public List<Pedido> buscarTodosOsPedidos() {
         return pedidoRepository.findAll();
     }
 
-    // diferença entre salvar e editar é que se salvar passando o id atualiza
-    // salvar sem id o banco de dado vai gerar um registro novo do pedido
-    public void salvarPedido(Pedido pedido) {
-        pedidoRepository.save(pedido);
+    public Pedido buscarPorId(Integer numeroPedido) {
+        return pedidoRepository.findById(numeroPedido)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + numeroPedido));
     }
 
-    // Buscar um pedido por ID no JPA Repository
-    public Pedido buscarPorId(Integer id) {
-        return pedidoRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado com ID: " + id));
+    @Transactional // Garante que a operação seja atômica
+    public Pedido criarNovoPedido() {
+        Pedido novoPedido = new Pedido();
+        novoPedido.setDataEHora(LocalDateTime.now());
+        // Salva o novo pedido no banco de dados. O JPA/Hibernate
+        // preencherá o numeroPedido (ID) automaticamente.
+        Pedido pedidoSalvo = pedidoRepository.save(novoPedido);
+
+        return pedidoSalvo; // Retorna o objeto Pedido completo, já com o ID
     }
 
-    // Deletar um pedido por ID no JPA Repository
-    public void excluirPedidoPorId(Integer id) {
-        pedidoRepository.deleteById(id);
-    }
-
-    // Editar pedido (atualizar suas informações)
-    public Pedido atualizarPedido(Pedido pedido) {
-        if (pedido.getNumeroPedido() != null) {
-            return pedidoRepository.save(pedido); // aqui chamamos o método save acima
+    @Transactional
+    public void excluir(Integer numeroPedido) {
+        if (!pedidoRepository.existsById(numeroPedido)) {
+            throw new EntityNotFoundException("Pedido não encontrado com ID: " + numeroPedido);
         }
-        return null;
+        // A exclusão em cascata deve remover itens e pagamentos associados
+        pedidoRepository.deleteById(numeroPedido);
     }
+
+
 
 }

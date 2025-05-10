@@ -1,53 +1,50 @@
+
 package com.petshop.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "produtos")
 public class Produto {
 
-    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 150)
     private String nome;
 
-    private double preco;
-    
-    private String fotoPath; // Caminho da imagem
+    @Column
+    private Double preco;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fk_categorias_id")
     private Categoria categoria;
 
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Estoque> estoque;
+    @Column(name = "foto_path", length = 255)
+    private String fotoPath;
 
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Itens_de_Pedidos> itens_de_pedidos;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ItemDePedido> itensPedido = new ArrayList<>();
 
-    // Construtores
+    // --- Construtores
     public Produto() {
     }
 
-    public Produto(String nome, double preco) {
+    public Produto(Integer id, String nome, Double preco, Categoria categoria, String fotoPath,
+            List<ItemDePedido> itensPedido) {
+        this.id = id;
         this.nome = nome;
         this.preco = preco;
+        this.categoria = categoria;
+        this.fotoPath = fotoPath;
+        this.itensPedido = itensPedido;
     }
 
-    // Getters and Setters
-
+    // Getters, Setters
     public Integer getId() {
         return id;
     }
@@ -64,20 +61,12 @@ public class Produto {
         this.nome = nome;
     }
 
-    public double getPreco() {
+    public Double getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
+    public void setPreco(Double preco) {
         this.preco = preco;
-    }
-
-    public String getFotoPath() {
-        return fotoPath;
-    }
-
-    public void setFotoPath(String fotoPath) {
-        this.fotoPath = fotoPath;
     }
 
     public Categoria getCategoria() {
@@ -88,4 +77,43 @@ public class Produto {
         this.categoria = categoria;
     }
 
+    public String getFotoPath() {
+        return fotoPath;
+    }
+
+    public void setFotoPath(String fotoPath) {
+        this.fotoPath = fotoPath;
+    }
+
+    public List<ItemDePedido> getItensPedido() {
+        return itensPedido;
+    }
+
+    public void setItensPedido(List<ItemDePedido> itensPedido) {
+        this.itensPedido = itensPedido;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Produto produto = (Produto) o;
+        return Objects.equals(id, produto.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Produto{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", preco=" + preco +
+                '}';
+    }
 }

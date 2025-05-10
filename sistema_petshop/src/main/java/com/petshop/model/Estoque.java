@@ -1,9 +1,6 @@
 package com.petshop.model;
 
-import java.time.LocalDateTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,40 +9,48 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Entity
 @Table(name = "estoque")
 public class Estoque {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    private LocalDateTime data_entrada;
+    @Column(name = "data_entrada")
+    private LocalDateTime dataEntrada;
 
-    private String nota_de_entrada;
+    @Column(name = "nota_de_entrada", length = 30)
+    private String notaDeEntrada;
 
-    private int quantidade;
+    @Column(name = "quantidade")
+    private Integer quantidade;
 
-    private int valor_de_entrada;
+    @Column(name = "valor_de_entrada")
+    private Double valorDeEntrada;
 
     @ManyToOne
-    @JoinColumn(name = "produto_id", nullable = false)
+    @JoinColumn(name = "fk_produtos_id")
     private Produto produto;
 
-    // constructors
+    // Construtores
     public Estoque() {
     }
 
-    public Estoque(Integer id, LocalDateTime data_entrada, String nota_de_entrada, int quantidade, int valor_de_entrada,
-            Produto produto) {
+    public Estoque(Integer id, LocalDateTime dataEntrada, String notaDeEntrada, Integer quantidade,
+            Double valorDeEntrada, Produto produto) {
         this.id = id;
-        this.data_entrada = data_entrada;
-        this.nota_de_entrada = nota_de_entrada;
+        this.dataEntrada = dataEntrada;
+        this.notaDeEntrada = notaDeEntrada;
         this.quantidade = quantidade;
-        this.valor_de_entrada = valor_de_entrada;
+        this.valorDeEntrada = valorDeEntrada;
         this.produto = produto;
     }
 
+    // Getters e Setters
     public Integer getId() {
         return id;
     }
@@ -55,35 +60,35 @@ public class Estoque {
     }
 
     public LocalDateTime getDataEntrada() {
-        return data_entrada;
+        return dataEntrada;
     }
 
-    public void setDataEntrada(LocalDateTime data_entrada) {
-        this.data_entrada = data_entrada;
+    public void setDataEntrada(LocalDateTime dataEntrada) {
+        this.dataEntrada = dataEntrada;
     }
 
-    public String getNota_de_entrada() {
-        return nota_de_entrada;
+    public String getNotaDeEntrada() {
+        return notaDeEntrada;
     }
 
-    public void setNota_de_entrada(String nota_de_entrada) {
-        this.nota_de_entrada = nota_de_entrada;
+    public void setNotaDeEntrada(String notaDeEntrada) {
+        this.notaDeEntrada = notaDeEntrada;
     }
 
-    public int getQuantidade() {
+    public Integer getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(int quantidade) {
+    public void setQuantidade(Integer quantidade) {
         this.quantidade = quantidade;
     }
 
-    public int getValor_de_entrada() {
-        return valor_de_entrada;
+    public Double getValorDeEntrada() {
+        return valorDeEntrada;
     }
 
-    public void setValor_de_entrada(int valor_de_entrada) {
-        this.valor_de_entrada = valor_de_entrada;
+    public void setValorDeEntrada(Double valorDeEntrada) {
+        this.valorDeEntrada = valorDeEntrada;
     }
 
     public Produto getProduto() {
@@ -94,4 +99,29 @@ public class Estoque {
         this.produto = produto;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Estoque estoque = (Estoque) o;
+        return Objects.equals(id, estoque.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Estoque{" +
+                "id=" + id +
+                ", dataEntrada=" + dataEntrada +
+                ", notaDeEntrada='" + notaDeEntrada + '\'' +
+                ", quantidade=" + quantidade +
+                ", valorDeEntrada=" + valorDeEntrada +
+                '}';
+    }
 }

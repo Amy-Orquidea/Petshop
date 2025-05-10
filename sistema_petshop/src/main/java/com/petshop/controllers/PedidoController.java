@@ -1,74 +1,132 @@
 package com.petshop.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.petshop.model.Animal;
+import com.petshop.model.Cliente;
+import com.petshop.model.ItemDePedido;
 import com.petshop.model.Pedido;
-import com.petshop.model.Pagamentos;
-import com.petshop.services.PagamentosService;
+import com.petshop.model.Produto;
+import com.petshop.model.Vendedor;
+import com.petshop.services.AnimalService;
+import com.petshop.services.ClienteService;
+import com.petshop.services.ItemDePedidoService;
 import com.petshop.services.PedidoService;
+import com.petshop.services.ProdutoService;
+import com.petshop.services.VendedorService;
 
 @Controller
+@RequestMapping("/pedidos") // Define um prefixo para as rotas do controlador
 public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
 
     @Autowired
-    private PagamentosService pagamentosService;
+    private ItemDePedidoService itemDePedidoService;
 
-    @GetMapping("/pedidos")
-    public String listarPedidos(Model model) {
+    @Autowired
+    private AnimalService animalService;
+
+    @Autowired
+    private ClienteService clienteService;
+
+    @Autowired
+    private ProdutoService produtoService;
+
+    @Autowired
+    private VendedorService vendedorService;
+
+
+    @GetMapping
+    public String listarPedidos(Model model){
         model.addAttribute("pedidos", pedidoService.buscarTodosOsPedidos());
         return "pedidos/lista";
     }
 
-    @GetMapping("/pedidos/cadastro")
-    public String exibirFormularioCadastro(Model model) {
-        model.addAttribute("pagamentos", pagamentosService.buscarTodosOsPagamentos());
+
+    @GetMapping("/novo")
+    public String mostrarFormularioPedido(Model model) {
+
+        Pedido novoPedido = pedidoService.criarNovoPedido();
+        model.addAttribute("pedido", novoPedido);
+
+        model.addAttribute("animais", animalService.buscarTodosOsAnimais());
+        model.addAttribute("clientes", clienteService.buscarTodosOsClientes());
+        model.addAttribute("produtos", produtoService.buscarTodosOsProdutos());
+        model.addAttribute("vendedores", vendedorService.buscarTodosOsVendedores());
+
         return "pedidos/cadastro";
     }
 
-    @GetMapping("/pedidos/editar/{id}")
+    @GetMapping("/{id}")
     public String editarPedido(@PathVariable Integer id, Model model) {
+
         Pedido pedido = pedidoService.buscarPorId(id);
         model.addAttribute("pedido", pedido);
-        model.addAttribute("pagamentos", pagamentosService.buscarTodosOsPagamentos());
+
+        model.addAttribute("animais", animalService.buscarTodosOsAnimais());
+        model.addAttribute("clientes", clienteService.buscarTodosOsClientes());
+        model.addAttribute("produtos", produtoService.buscarTodosOsProdutos());
+        model.addAttribute("vendedores", vendedorService.buscarTodosOsVendedores());
+        model.addAttribute("itensDoPedido", itemDePedidoService.buscarPorNumeroDoPedido(id));
+
         return "pedidos/editar";
     }
 
-    @PostMapping("/pedidos/editar/{id}")
-    public String atualizarProduto(@PathVariable Integer id, @ModelAttribute Pedido pedidoAtualizado) {
-        Pedido pedido = pedidoService.buscarPorId(id);
-        Pagamentos pagamentos = pagamentosService.buscarPorId(id);
-        pedido.setNumeroPedido(pedidoAtualizado.getNumeroPedido());
-        pedido.setDataHora(pedidoAtualizado.getDataHora());
-        pedido.setPagamentos(pagamentos);
-        pedidoService.salvarPedido(pedido);
+    // Salvar o novo item de pedido e redirecionar para carregar novamente a tela de pedido
+    @PostMapping()
+    public String adicionarItemAoPedido(
+            @ModelAttribute ItemDePedido itemDePedido,
+            @RequestParam("numeroPedido") Integer numeroPedido,
+            // Parâmetros vindos do formulário
+            @RequestParam("produtoId") Integer produtoId,
+            @RequestParam("desconto") Double desconto,
+            @RequestParam("quantidade") Integer quantidade,
+            @RequestParam("clienteId") Integer clienteId,
+            @RequestParam("animalId") Integer animalId,
+            @RequestParam("vendedorId") Integer vendedorId,
+            RedirectAttributes redirectAttributes) {
+
+        Produto produto = produtoService.buscarPorId(produtoId);
+        Cliente cliente = clienteService.buscarPorId(clienteId);
+        Animal animal = animalService.buscarPorId(animalId);
+        Vendedor vendedor = vendedorService.buscarPorId(vendedorId);
+                
+
+        try {
+            itemDePedidoService.adicionarItemDePedido(numeroPedido, produto, quantidade, cliente, animal, vendedor, desconto);
+        } catch (Exception e) {
+            // Logar erro e retornar mensagem
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao adicionar item: " + e.getMessage());
+        }
+
+        // Recarrega a mesma página do pedido
+        return "redirect:/pedidos/" + numeroPedido;
+    }
+
+
+    @GetMapping("/removerItem/{id}")
+    public String deletarItemPedido(@PathVariable Integer id) {
+        Integer numeroPedido = itemDePedidoService.buscarNumeroPedidoPorItemId(id);
+        itemDePedidoService.excluirItemDePedidoPorId(id);
+        return "redirect:/pedidos/" + numeroPedido;
+    }
+
+    @GetMapping("/deletar/{id}")
+    public String deletarPedido(@PathVariable Integer id) {
+        pedidoService.excluir(id);
         return "redirect:/pedidos";
     }
 
-    @GetMapping("/pedidos/deletar/{id}")
-    public String deletarpedido(@PathVariable Integer id) {
-        pedidoService.excluirPedidoPorId(id);
-        return "redirect:/pedisdos";
-    }
-
-    // Podemos salvar sem a foto por isso verificamos se a foto veio vazia com o
-    // método isEmpty()
-    @PostMapping("/pedidos")
-    public String salvarpedido(@ModelAttribute Pedido pedido, @RequestParam("pagamentoId") Integer pagamentoId) {
-        Pagamentos pagamentos = pagamentosService.buscarPorId(pagamentoId);
-        pedido.setPagamentos(pagamentos);
-        pedidoService.salvarPedido(pedido);
-        return "redirect:/pedidos";
-    }
 
 }

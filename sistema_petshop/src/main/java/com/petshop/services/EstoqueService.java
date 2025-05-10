@@ -2,28 +2,31 @@ package com.petshop.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.petshop.model.Estoque;
 import com.petshop.model.Produto;
 import com.petshop.repository.EstoqueRepository;
-import com.petshop.repository.ProdutoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-
 @Service
 public class EstoqueService {
-    
-    @Autowired
+
     private final EstoqueRepository estoqueRepository;
 
-    private ProdutoService produtoService;
+    private final ProdutoService produtoService;
 
-    public EstoqueService(EstoqueRepository estoqueRepository, ProdutoRepository produtoRepository) {
+    public EstoqueService(EstoqueRepository estoqueRepository, @Lazy ProdutoService produtoService) {
         this.estoqueRepository = estoqueRepository;
+        this.produtoService = produtoService;
+        
+    }
+
+    public Estoque buscarProdutoPorId(Integer id) {
+        return estoqueRepository.findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Estoque não encontrado com ID: " + id));
     }
 
     public List<Estoque> buscarEstoqueDeProdutos() {
@@ -43,15 +46,18 @@ public class EstoqueService {
     }
 
     public List<Estoque> listarPorProduto(Integer produtoId) {
-        Optional<Produto> produtoOpt = produtoRepository.findById(produtoId);
-        if (produtoOpt.isPresent()) {
-            return estoqueRepository.findByProdutoIdOrderByDataEntradaDesc(produtoId);
-        }
-        return List.of();
+        return estoqueRepository.findByProdutoIdOrderByDataEntradaDesc(produtoId);
     }
 
     public Integer getTotalQuantidadePorProduto(Integer produtoId) {
         Integer total = estoqueRepository.getTotalQuantidadeByProdutoId(produtoId);
         return total != null ? total : 0;
     }
+
+    public void salvar(Estoque estoque) {  
+        estoqueRepository.save(estoque);
+    }
+
+
+
 }

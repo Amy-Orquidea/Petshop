@@ -2,21 +2,17 @@ package com.petshop.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+import java.nio.file.Path;
+import com.petshop.services.RacaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import com.petshop.comum.BibliotecaDeMetodosComunsAoSistema;
@@ -25,23 +21,26 @@ import com.petshop.model.Cliente;
 import com.petshop.model.Raca;
 import com.petshop.services.AnimalService;
 import com.petshop.services.ClienteService;
-import com.petshop.services.RacaService;
 
 @Controller
 @RequestMapping("/animais")
 public class AnimalController {
 
     @Autowired
-    private AnimalService animalService;
+    private RacaService racaService;
 
     @Autowired
-    private ClienteService clienteService; // Injetando o serviço de Cliente
+    private AnimalService animalService; // Injetando AnimalService
 
     @Autowired
-    private RacaService racaService; // Injetando o serviço de Cliente
+    private ClienteService clienteService; // Injetando ClienteService
 
-    @Value("${imagens.animais.path}")
+    @Value("${imagens.animais.path}") // Caminho para salvar as imagens cadastrado em application.properties
     private String imagesPath;
+
+    AnimalController(RacaService racaService) {
+        this.racaService = racaService;
+    }
 
     @GetMapping
     public String listarAnimais(Model model) {
@@ -53,7 +52,7 @@ public class AnimalController {
     public String exibirFormularioCadastro(Model model) {
         model.addAttribute("animal", new Animal());
         model.addAttribute("clientes", clienteService.buscarTodosOsClientes()); // Lista de clientes para seleção
-        model.addAttribute("racas", racaService.buscarTodasAsRacas());
+        model.addAttribute("racas", racaService.buscarTodasAsRacas()); // Lista todas as raças cadastradas
         return "animais/cadastro";
     }
 
@@ -69,6 +68,7 @@ public class AnimalController {
 
         Raca raca = racaService.buscarPorId(racaId);
         animal.setRaca(raca); // Seta a Raça na classe Animal
+
         animal.setDataDeNascimento(dataDeNascimento);
 
         if (!foto.isEmpty()) {
@@ -89,23 +89,29 @@ public class AnimalController {
     @GetMapping("/editar/{id}")
     public String editarAnimal(@PathVariable Integer id, Model model) {
         Animal animal = animalService.buscarPorId(id);
+
         model.addAttribute("animal", animal);
-        model.addAttribute("clientes", clienteService.buscarTodosOsClientes()); // Permite alterar o cliente
+        model.addAttribute("clientes", clienteService.buscarTodosOsClientes());
+        model.addAttribute("racas", racaService.buscarTodasAsRacas());
         return "animais/editar";
     }
 
     @PostMapping("/editar/{id}")
     public String atualizarAnimal(@PathVariable Integer id,
             @ModelAttribute Animal animalAtualizado,
-            @RequestParam("clienteId") Integer clienteId) {
+            @RequestParam("clienteId") Integer clienteId,
+            @RequestParam("racaId") Integer racaId) {
+        
+        
         Animal animal = animalService.buscarPorId(id);
+        animal.setNome(animalAtualizado.getNome());
+        animal.setDataDeNascimento(animalAtualizado.getDataDeNascimento());
 
         Cliente cliente = clienteService.buscarPorId(clienteId);
-
-        animal.setNome(animalAtualizado.getNome());
-        animal.setRaca(animalAtualizado.getRaca());
-        animal.setDataDeNascimento(animalAtualizado.getDataDeNascimento());
         animal.setCliente(cliente); // Atualiza o cliente do animal
+
+        Raca raca = racaService.buscarPorId(racaId);
+        animal.setRaca(raca);
 
         animalService.salvarAnimal(animal);
         return "redirect:/animais";

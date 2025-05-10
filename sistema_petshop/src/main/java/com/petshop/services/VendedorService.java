@@ -1,27 +1,24 @@
 package com.petshop.services;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.petshop.model.Vendedor;
 import com.petshop.repository.VendedorRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class VendedorService {
 
-    @Autowired
-    private VendedorRepository vendedorRepository;
+    private final VendedorRepository vendedorRepository;
+
+    public VendedorService(VendedorRepository vendedorRepository) {
+        this.vendedorRepository = vendedorRepository;
+    }
 
     public List<Vendedor> buscarTodosOsVendedores() {
         return vendedorRepository.findAll();
-    }
-
-    public void salvarVendedor(Vendedor vendedor) {
-        vendedorRepository.save(vendedor);
     }
 
     public Vendedor buscarPorId(Integer id) {
@@ -29,14 +26,24 @@ public class VendedorService {
                 .orElseThrow(() -> new EntityNotFoundException("Vendedor não encontrado com ID: " + id));
     }
 
-    public void excluirVendedorPorId(Integer id) {
-        vendedorRepository.deleteById(id);
-    }
 
-    public Vendedor atualizarVendedor(Vendedor vendedor) {
+    public Vendedor salvarVendedor(Vendedor vendedor) {
         if (vendedor.getId() != null) {
+            Vendedor existente = buscarPorId(vendedor.getId());
+            existente.setNome(vendedor.getNome());
+            existente.setEmail(vendedor.getEmail());
+            existente.setTelefone(vendedor.getTelefone());
+            return vendedorRepository.save(existente);
+        } else {
             return vendedorRepository.save(vendedor);
         }
-        return null;
+    }
+
+    public void excluirVendedorPorId(Integer id) {
+        if (!vendedorRepository.existsById(id)) {
+            throw new EntityNotFoundException("Vendedor não encontrado com ID: " + id);
+        }
+        // Adicionar verificação de dependência (Itens de Pedido) se necessário
+        vendedorRepository.deleteById(id);
     }
 }

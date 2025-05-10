@@ -1,33 +1,35 @@
 package com.petshop.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "categorias")
 public class Categoria {
 
-    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
+
+    @Column(length = 150)
     private String nome;
 
-    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Produto> produto;
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Produto> produtos = new ArrayList<>();
 
-    // Construtores
+    // --- Construtores
     public Categoria() {
     }
 
+    public Categoria(Integer id, String nome, List<Produto> produtos) {
+        this.id = id;
+        this.nome = nome;
+        this.produtos = produtos;
+    }
+
+    // Getters, Setters
     public Integer getId() {
         return id;
     }
@@ -44,17 +46,31 @@ public class Categoria {
         this.nome = nome;
     }
 
-    public Categoria(Integer id, String nome) {
-        this.id = id;
-        this.nome = nome;
+    public List<Produto> getProdutos() {
+        return produtos;
     }
 
-    public List<Produto> getProduto() {
-        return produto;
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
     }
 
-    public void setProduto(List<Produto> produto) {
-        this.produto = produto;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Categoria categoria = (Categoria) o;
+        return Objects.equals(id, categoria.id);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Categoria{" + "id=" + id + ", nome='" + nome + '\'' + '}';
+    }
 }

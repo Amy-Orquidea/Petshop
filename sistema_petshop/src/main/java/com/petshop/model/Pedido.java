@@ -1,67 +1,62 @@
 package com.petshop.model;
 
-import java.util.Calendar;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "pedidos")
 public class Pedido {
 
-    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer numero_pedido;
+    @Column(name = "numero_pedido")
+    private Integer numeroPedido;
 
-    private Calendar dataHora = Calendar.getInstance();
+    @Column(name = "data_e_hora")
+    private LocalDateTime dataEHora;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Itens_de_Pedidos> itens_de_pedidos;
+    // Relacionamento com ItensDePedido (um pedido tem muitos itens)
+    // cascade = CascadeType.ALL e orphanRemoval = true garantem que os itens
+    // são salvos/excluídos junto com o pedido
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ItemDePedido> itens = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "pagamento_id", insertable = false, updatable = false)
-    private Pagamentos pagamentos;
-
-    // Construtores
+    // Construtor
     public Pedido() {
     }
 
-    public Pedido(Integer numero_pedido, Calendar dataHora) {
-        this.numero_pedido = numero_pedido;
-        this.dataHora = dataHora;
+    public Pedido(Integer numeroPedido, LocalDateTime dataEHora, List<ItemDePedido> itens) {
+        this.numeroPedido = numeroPedido;
+        this.dataEHora = dataEHora;
+        this.itens = itens;
     }
 
+    // Getters, Setters
     public Integer getNumeroPedido() {
-        return numero_pedido;
+        return numeroPedido;
     }
 
-    public void setNumeroPedido(Integer numero_pedido) {
-        this.numero_pedido = numero_pedido;
+    public void setNumeroPedido(Integer numeroPedido) {
+        this.numeroPedido = numeroPedido;
     }
 
-    public Calendar getDataHora() {
-        return dataHora;
+    public LocalDateTime getDataEHora() {
+        return dataEHora;
     }
 
-    public void setDataHora(Calendar dataHora) {
-        this.dataHora = dataHora;
+    public void setDataEHora(LocalDateTime dataEHora) {
+        this.dataEHora = dataEHora;
     }
 
-    public Pagamentos getPagamentos() {
-        return pagamentos;
+    public List<ItemDePedido> getItens() {
+        return itens;
     }
 
-    public void setPagamentos(Pagamentos pagamentos) {
-        this.pagamentos = pagamentos;
+    public void setItens(List<ItemDePedido> itens) {
+        this.itens = itens;
     }
+
 
 }

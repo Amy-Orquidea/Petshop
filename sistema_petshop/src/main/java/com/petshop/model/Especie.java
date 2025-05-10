@@ -1,9 +1,13 @@
 package com.petshop.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,25 +18,27 @@ import jakarta.persistence.Table;
 @Table(name = "especies")
 public class Especie {
 
-    // Declaração das variáveis
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "nome", length = 150)
     private String nome;
 
-    @OneToMany(mappedBy = "especie", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Raca> raca;
+    @OneToMany(mappedBy = "especie", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Raca> racas = new ArrayList<>();
 
-    // Construtores
+    // Construtor padrão
     public Especie() {
     }
 
-    public Especie(String nome) {
+    // Construtor com campos
+    public Especie(Integer id, String nome) {
+        this.id = id;
         this.nome = nome;
     }
 
-    // getters and setters
+    // Getters e Setters
     public Integer getId() {
         return id;
     }
@@ -49,4 +55,34 @@ public class Especie {
         this.nome = nome;
     }
 
+    public List<Raca> getRacas() {
+        return racas;
+    }
+
+    public void setRacas(List<Raca> racas) {
+        this.racas = racas;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Especie especie = (Especie) o;
+        return Objects.equals(id, especie.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Especie{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
+    }
 }
