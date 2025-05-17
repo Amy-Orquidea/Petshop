@@ -5,9 +5,15 @@ import com.petshop.model.Produto;
 import com.petshop.repository.ProdutoRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -16,7 +22,11 @@ public class ProdutoService {
     private final ProdutoRepository produtoRepository;
     private final CategoriaService categoriaService; // Para buscar categoria
 
-    // Usar @Lazy para quebrar dependência circular se CategoriaService também depender de ProdutoService
+    @Value("${file.upload-dir:src/main/resources/static/}")
+    private String uploadDir;
+
+    // Usar @Lazy para quebrar dependência circular se CategoriaService também
+    // depender de ProdutoService
     public ProdutoService(ProdutoRepository produtoRepository, @Lazy CategoriaService categoriaService) {
         this.produtoRepository = produtoRepository;
         this.categoriaService = categoriaService;
@@ -40,7 +50,7 @@ public class ProdutoService {
         produto.setCategoria(categoria);
 
         if (produto.getPreco() == null || produto.getPreco() < 0) {
-             throw new IllegalArgumentException("Preço do produto não pode ser negativo.");
+            throw new IllegalArgumentException("Preço do produto não pode ser negativo.");
         }
 
         // Lógica de atualização vs criação
@@ -58,11 +68,30 @@ public class ProdutoService {
         }
     }
 
-    public void excluirProdutoPorId(Integer id) { // Usar Integer
-        if (!produtoRepository.existsById(id)) {
-            throw new EntityNotFoundException("Produto não encontrado com ID: " + id);
+    public void excluirProdutoPorId(Integer id) {
+        // Verifica se o produto existe
+        Produto prod = produtoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado com ID: " + id));
+
+        // Exclui o arquivo associado, se existir
+        String fotoPath = prod.getFotoPath();
+        if (fotoPath != null && !fotoPath.isBlank()) {
+            try {
+                Path diretorioPath = Paths.get(uploadDir);
+                Path caminhoArquivo = diretorioPath.resolve(fotoPath).normalize(); // Normaliza para evitar path
+                                                                                   // traversal
+
+                // Verifica se o arquivo existe antes de tentar deletar
+                if (Files.exists(caminhoArquivo)) {
+                    Files.delete(caminhoArquivo);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao deletar o arquivo associado ao produto com ID: " + id, e);
+            }
         }
-        // Adicionar verificação de dependência (Itens de Pedido, Estoque) se necessário
+
+        // Exclui o produto do banco de dados
         produtoRepository.deleteById(id);
     }
+
 }

@@ -55,7 +55,7 @@ public class ProdutoController {
             produto.setCategoria(categoria);
 
             if (!foto.isEmpty()) {
-                String nomeUUID = UUID.randomUUID().toString().replace("-", "");
+                String nomeUUID = UUID.randomUUID().toString().replace("-", "") + foto.getOriginalFilename();
                 Path diretorioPath = Paths.get(imagesPath);
                 Files.createDirectories(diretorioPath);
                 Path caminhoArquivo = diretorioPath.resolve(nomeUUID);
@@ -93,7 +93,6 @@ public class ProdutoController {
         return "produtos/editar";
     }
 
-
     @PostMapping("/editar/{id}")
     public String atualizarProduto(@PathVariable Integer id,
             @ModelAttribute Produto produtoAtualizado,
@@ -110,7 +109,8 @@ public class ProdutoController {
 
             // Lida com a foto apenas se uma nova foi enviada
             if (foto != null && !foto.isEmpty()) {
-                String nomeArquivo = System.currentTimeMillis() + "_"+ foto.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
+                String nomeArquivo = System.currentTimeMillis() + "_"
+                        + foto.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
                 Path diretorioPath = Paths.get(imagesPath);
                 Files.createDirectories(diretorioPath);
                 Path caminhoArquivo = diretorioPath.resolve(nomeArquivo);
@@ -138,7 +138,8 @@ public class ProdutoController {
     }
 
     @GetMapping("/deletar/{id}")
-    public String deletarProduto(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+    public String deletarProduto(@PathVariable Integer id, RedirectAttributes redirectAttributes,
+            @RequestParam(value = "foto", required = false) MultipartFile foto) {
         try {
             produtoService.excluirProdutoPorId(id);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto excluído com sucesso!");

@@ -11,6 +11,22 @@
     <link href="../../css/estilo.css" rel="stylesheet">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
+    <style>
+        #imagem-preview {
+            max-width: 75%;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+        }
+
+        .imagem-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            border-left: 2px solid #ddd;
+            padding-left: 20px;
+        }
+    </style>
 </head>
 
 <body>
@@ -18,30 +34,57 @@
     <div class="centralizado" id="main">
         <div class="container">
             <h2>Cadastro de Produtos</h2>
-            <form th:action="@{'/produtos/editar/' + ${produto.id}}" method="post">
+            <div class="row">
+                <div class="col-md-6 form-container">
+                    <form th:action="@{'/produtos/editar/' + ${produto.id}}" method="post"
+                        enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Nome do Produto</label>
+                            <input type="text" th:value="${produto.nome}" class="form-control" name="nome" required>
+                        </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Nome do Produto</label>
-                    <input type="text" th:value="${produto.nome}" class="form-control" name="nome" required>
+                        <div class="mb-3">
+                            <label class="form-label">Preço</label>
+                            <input type="text" th:value="${produto.preco}" class="form-control" name="preco" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="foto" class="form-label">Foto do Produto</label>
+                            <input type="file" class="form-control" id="foto" name="foto" accept="image/*"
+                            onchange="mostrarImagem(event)">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="categoriaId" class="form-label">Categoria do Produto</label>
+                            <select class="form-select" name="categoriaId" id="categoriaId" required>
+                                <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
+                                    th:text="${categoria.nome}" th:selected="${categoria.id == produto.categoria.id}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Atualizar</button>
+                    </form>
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Preço</label>
-                    <input type="text" th:value="${produto.preco}" class="form-control" name="preco" required>
+                <div class="col-md-6 imagem-container">
+                    <img id="imagem-preview" th:src="@{${'../../' + produto.fotoPath}}"/>
                 </div>
-
-                <div class="mb-3">
-                    <label for="categoriaId" class="form-label">Categoria do Produto</label>
-                    <select class="form-select" name="categoriaId" id="categoriaId" required>
-                        <option th:each="categoria : ${categorias}" th:value="${categoria.id}"
-                            th:text="${categoria.nome}" th:selected="${categoria.id == produto.categoria.id}"></option>
-                        </option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Atualizar</button>
-            </form>
+            </div>
         </div>
+    </div>
+    <script>
+        function mostrarImagem(event) {
+            const imagem = document.getElementById('imagem-preview');
+            const arquivo = event.target.files[0];
+            if (arquivo) {
+                const leitor = new FileReader();
+                leitor.onload = function (e) {
+                    imagem.src = e.target.result;
+                };
+                leitor.readAsDataURL(arquivo);
+            }
+        }
+    </script>
 </body>
 
 </html>
