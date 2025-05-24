@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.petshop.comum.BibliotecaDeMetodosComunsAoSistema;
 import com.petshop.model.Animal;
+import com.petshop.model.Categoria;
 import com.petshop.model.Cliente;
+import com.petshop.model.Produto;
 import com.petshop.model.Raca;
 import com.petshop.services.AnimalService;
 import com.petshop.services.ClienteService;
@@ -72,7 +74,7 @@ public class AnimalController {
         animal.setDataDeNascimento(dataDeNascimento);
 
         if (!foto.isEmpty()) {
-            String nomeUUID = UUID.randomUUID().toString().replace("-", "");
+            String nomeUUID = UUID.randomUUID().toString().replace("-", "") + foto.getOriginalFilename();
             Path diretorioPath = Paths.get(imagesPath);
             Files.createDirectories(diretorioPath);
             Path caminhoArquivo = diretorioPath.resolve(nomeUUID);
@@ -99,22 +101,43 @@ public class AnimalController {
     @PostMapping("/editar/{id}")
     public String atualizarAnimal(@PathVariable Integer id,
             @ModelAttribute Animal animalAtualizado,
+            @RequestParam("foto") MultipartFile foto,
             @RequestParam("clienteId") Integer clienteId,
             @RequestParam("racaId") Integer racaId) {
-        
-        
-        Animal animal = animalService.buscarPorId(id);
-        animal.setNome(animalAtualizado.getNome());
-        animal.setDataDeNascimento(animalAtualizado.getDataDeNascimento());
+        try {
+            animalAtualizado.setId(id);
 
-        Cliente cliente = clienteService.buscarPorId(clienteId);
-        animal.setCliente(cliente); // Atualiza o cliente do animal
+            // Busca e associa a Categoria
+            Cliente cliente = clienteService.buscarPorId(clienteId);
+            animalAtualizado.setCliente(cliente);
 
-        Raca raca = racaService.buscarPorId(racaId);
-        animal.setRaca(raca);
+            // Lida com a foto apenas se uma nova foi enviada
+            if (foto != null && !foto.isEmpty()) {
+                String nomeUUID = UUID.randomUUID().toString().replace("-", "") + foto.getOriginalFilename();
+                Path diretorioPath = Paths.get(imagesPath);
+                Files.createDirectories(diretorioPath);
+                Path caminhoArquivo = diretorioPath.resolve(nomeUUID);
+                Files.copy(foto.getInputStream(), caminhoArquivo);
+                animalAtualizado.setFotoPath(caminhoArquivo.toString());
+            } else {
+                // Mantém a foto existente
+                Animal animalExistente = animalService.buscarPorId(id);
+                animalAtualizado.setFotoPath(animalExistente.getFotoPath());
+            }
 
-        animalService.salvarAnimal(animal);
-        return "redirect:/animais";
+            // O service salvarProduto fará a lógica para atualizar o produto
+            animalService.salvarAnimal(animalAtualizado);
+            redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto atualizado com sucesso!");
+            return "redirect:/produtos";
+        } catch (IOException e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar a foto do produto.");
+            model.addAttribute("produto", produtoAtualizado);
+            model.addAttribute("categorias", categoriaService.buscarTodosAsCategorias());
+            return "produtos/editar";
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao atualizar produto: " + e.getMessage());
+            return "redirect:/produtos/editar/" + id;
+        }
     }
 
     @GetMapping("/deletar/{id}")

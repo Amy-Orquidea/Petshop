@@ -109,11 +109,10 @@ public class ProdutoController {
 
             // Lida com a foto apenas se uma nova foi enviada
             if (foto != null && !foto.isEmpty()) {
-                String nomeArquivo = System.currentTimeMillis() + "_"
-                        + foto.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
+                String nomeUUID = UUID.randomUUID().toString().replace("-", "") + foto.getOriginalFilename();
                 Path diretorioPath = Paths.get(imagesPath);
                 Files.createDirectories(diretorioPath);
-                Path caminhoArquivo = diretorioPath.resolve(nomeArquivo);
+                Path caminhoArquivo = diretorioPath.resolve(nomeUUID);
                 Files.copy(foto.getInputStream(), caminhoArquivo);
                 produtoAtualizado.setFotoPath(caminhoArquivo.toString());
             } else {

@@ -1,13 +1,21 @@
 package com.petshop.services;
 
 import com.petshop.model.Animal;
+import com.petshop.model.Categoria;
 import com.petshop.model.Cliente;
+import com.petshop.model.Produto;
 import com.petshop.model.Raca;
 import com.petshop.repository.AnimalRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
@@ -16,6 +24,9 @@ public class AnimalService {
     private final AnimalRepository animalRepository;
     private final ClienteService clienteService;
     private final RacaService racaService;
+
+    @Value("${file.upload-dir:src/main/resources/static/}")
+    private String uploadDir;
 
     public AnimalService(AnimalRepository animalRepository, ClienteService clienteService, RacaService racaService) {
         this.animalRepository = animalRepository;
@@ -33,27 +44,23 @@ public class AnimalService {
     }
 
     public Animal salvarAnimal(Animal animal) {
-        if (animal.getCliente() != null && animal.getCliente().getId() != null) {
-            Cliente cliente = clienteService.buscarPorId(animal.getCliente().getId());
-            animal.setCliente(cliente);
-        } else {
-            throw new IllegalArgumentException("Cliente é obrigatório para salvar o animal.");
+        // Validar e anexar Categoria
+        if (animal.getCliente() == null || animal.getCliente().getId() == null) {
+            throw new IllegalArgumentException("Categoria é obrigatória para o animal.");
+        }
+        Categoria categoria = categoriaService.buscarPorIdOuFalhar(animal.getCategoria().getId());
+        animal.setCategoria(categoria);
+
+        if (animal.getPreco() == null || animal.getPreco() < 0) {
+            throw new IllegalArgumentException("Preço do animal não pode ser negativo.");
         }
 
-        if (animal.getRaca() != null && animal.getRaca().getId() != null) {
-            Raca raca = racaService.buscarPorId(animal.getRaca().getId());
-            animal.setRaca(raca);
-        } else {
-            throw new IllegalArgumentException("Raça é obrigatória para salvar o animal.");
-        }
-
-        // Lógica para atualização e criação de novo animal
+        // Lógica de atualização vs criação
         if (animal.getId() != null) {
-            Animal existente = buscarPorId(animal.getId());
+            animal existente = buscarPorId(animal.getId());
             existente.setNome(animal.getNome());
-            existente.setDataDeNascimento(animal.getDataDeNascimento());
-            existente.setCliente(animal.getCliente());
-            existente.setRaca(animal.getRaca());
+            existente.setPreco(animal.getPreco());
+            existente.setCategoria(animal.getCategoria()); // Atualiza categoria
             if (animal.getFotoPath() != null && !animal.getFotoPath().isBlank()) {
                 existente.setFotoPath(animal.getFotoPath());
             }
@@ -64,6 +71,24 @@ public class AnimalService {
     }
 
     public void excluirAnimalPorId(Integer id) {
-        animalRepository.deleteById(id);
-    }
+        // Verifica se o animal existe
+        Animal ani = animalRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("animal não encontrado com ID: " + id));
+
+        // Exclui o arquivo associado, se existir
+        String fotoPath = ani.getFotoPath();
+        if (fotoPath != null && !fotoPath.isBlank()) {
+            try {
+                Path diretorioPath = Paths.get(uploadDir);
+                Path caminhoArquivo = diretorioPath.resolve(fotoPath).normalize(); // Normaliza para evitar path
+                                                                                   // traversal
+
+                // Verifica se o arquivo existe antes de tentar deletar
+                if (Files.exists(caminhoArquivo)) {
+                    Files.delete(caminhoArquivo);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao deletar o arquivo associado ao animal com ID: " + id, e);
+            }
+        }
 }
