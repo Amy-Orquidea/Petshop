@@ -19,4 +19,15 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Integer> {
 
     @Query("SELECT SUM(p.valorPago) FROM Pagamento p WHERE p.pedido.numeroPedido = :numeroPedido")
     Double sumValorPagoByPedidoNumeroPedido(@Param("numeroPedido") Integer numeroPedido);
+
+        @Query(value = "SELECT m.nome_mes AS mes, " +
+            " ROUND(COALESCE(SUM(p.valor_pago), 0), 2) AS total_vendas " + 
+            "FROM  meses m " + 
+            "LEFT JOIN  pagamentos p   " + 
+            " ON MONTH(p.data_e_hora) = m.id_mes  " + 
+            " AND YEAR(p.data_e_hora) = 2024  " + 
+            "GROUP BY     m.nome_mes, m.id_mes " + 
+            "ORDER BY     m.id_mes", nativeQuery = true)
+    List<Object[]> findTotalVendasPorMes2024();
+
 }

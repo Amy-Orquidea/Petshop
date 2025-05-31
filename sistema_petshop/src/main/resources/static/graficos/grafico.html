@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+            #chartdiv {
+            width: 100%;
+            height: 450px;
+            padding: 10px;
+            box-sizing: border-box;
+            
+        }
+</style>
+<body>
+ <div id="chartdiv"></div>
+
+    <script>
+
+        am4core.ready(function() {
+
+            am4core.useTheme(am4themes_animated);
+
+            let chart = am4core.create("chartdiv", am4charts.XYChart);
+            let title = chart.titles.create();
+            title.text = "Vendas 2025";
+
+            chart.data = [
+				{
+					"mes": "Jan",
+					"vendas": 15
+				}, {
+					"mes": "Fev",
+					"vendas": 25
+				}, {
+                    "mes": "Mar",
+                    "vendas": 23
+                }, {
+                    "mes": "Abr",
+                    "vendas": 50
+                }, {
+                    "mes": "Mai",
+                    "vendas": 49
+                }, {
+                    "mes": "Jun",
+                    "vendas": 75
+                }, {
+                    "mes": "Jul",
+                    "vendas": 20
+                }, {
+                    "mes": "Ago",
+                    "vendas": 35
+                }, {
+                    "mes": "Set",
+                    "vendas": 90
+                }, {
+                    "mes": "Out",
+                    "vendas": 45
+                }, {
+                    "mes": "Nov",
+                    "vendas": 40
+                }, {
+                    "mes": "Dez",
+                    "vendas": 10
+                }
+			];
+
+            let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+            categoryAxis.dataFields.category = "mes";
+
+            let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+            let series = chart.series.push(new am4charts.ColumnSeries());
+            series.dataFields.valueY = "vendas";
+            series.dataFields.categoryX = "mes";
+            
+
+        });
+    </script>
+
+</body>
+
+</html>
