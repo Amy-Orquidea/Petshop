@@ -28,7 +28,7 @@ public class EspecieService {
     // }
 
     public Especie buscarPorIdOuFalhar(Integer id) {
-        return buscarPorId(id)
+        return especieRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Espécie não encontrada com ID: " + id));
     }
 
