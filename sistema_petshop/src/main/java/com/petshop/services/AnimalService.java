@@ -43,32 +43,32 @@ public class AnimalService {
                 .orElseThrow(() -> new EntityNotFoundException("Animal não encontrado com ID: " + id));
     }
 
-    // public Animal salvarAnimal(Animal animal) {
-    //     // Validar e anexar Categoria
-    //     if (animal.getCliente() == null || animal.getCliente().getId() == null) {
-    //         throw new IllegalArgumentException("Categoria é obrigatória para o animal.");
-    //     }
-    //     Categoria categoria = categoriaService.buscarPorIdOuFalhar(animal.getCategoria().getId());
-    //     animal.setCategoria(categoria);
+    public Animal salvarAnimal(Animal animal) {
+        // Validar e anexar Categoria
+        if (animal.getCliente() == null || animal.getCliente().getId() == null) {
+            throw new IllegalArgumentException("Cliente é obrigatória para o animal.");
+        }
+        Raca raca = racaService.buscarPorId(animal.getRaca().getId());
+        animal.setRaca(raca);
 
-    //     if (animal.getPreco() == null || animal.getPreco() < 0) {
-    //         throw new IllegalArgumentException("Preço do animal não pode ser negativo.");
-    //     }
+        if (animal.getRaca() == null || animal.getCliente() == null) {
+            throw new IllegalArgumentException("Está faltando Raça ou cliente");
+        }
 
-    //     // Lógica de atualização vs criação
-    //     if (animal.getId() != null) {
-    //         animal existente = buscarPorId(animal.getId());
-    //         existente.setNome(animal.getNome());
-    //         existente.setPreco(animal.getPreco());
-    //         existente.setCategoria(animal.getCategoria()); // Atualiza categoria
-    //         if (animal.getFotoPath() != null && !animal.getFotoPath().isBlank()) {
-    //             existente.setFotoPath(animal.getFotoPath());
-    //         }
-    //         return animalRepository.save(existente);
-    //     } else {
-    //         return animalRepository.save(animal);
-    //     }
-    // }
+        // Lógica de atualização vs criação
+        if (animal.getId() != null) {
+            Animal existente = buscarPorId(animal.getId());
+            existente.setNome(animal.getNome());
+            existente.setRaca(animal.getRaca());
+            existente.setCliente(animal.getCliente()); // Atualiza categoria
+            if (animal.getFotoPath() != null && !animal.getFotoPath().isBlank()) {
+                existente.setFotoPath(animal.getFotoPath());
+            }
+            return animalRepository.save(existente);
+        } else {
+            return animalRepository.save(animal);
+        }
+    }
 
     public void excluirAnimalPorId(Integer id) {
         // Verifica se o animal existe

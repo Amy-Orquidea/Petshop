@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.petshop.comum.BibliotecaDeMetodosComunsAoSistema;
 import com.petshop.model.Animal;
@@ -103,7 +104,8 @@ public class AnimalController {
             @ModelAttribute Animal animalAtualizado,
             @RequestParam("foto") MultipartFile foto,
             @RequestParam("clienteId") Integer clienteId,
-            @RequestParam("racaId") Integer racaId) {
+            @RequestParam("racaId") Integer racaId, Model model,
+            RedirectAttributes redirectAttributes) {
         try {
             animalAtualizado.setId(id);
 
@@ -128,15 +130,16 @@ public class AnimalController {
             // O service salvarProduto fará a lógica para atualizar o produto
             animalService.salvarAnimal(animalAtualizado);
             redirectAttributes.addFlashAttribute("mensagemSucesso", "Produto atualizado com sucesso!");
-            return "redirect:/produtos";
+            return "redirect:/animais";
         } catch (IOException e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao salvar a foto do produto.");
-            model.addAttribute("produto", produtoAtualizado);
-            model.addAttribute("categorias", categoriaService.buscarTodosAsCategorias());
-            return "produtos/editar";
+            model.addAttribute("animal", animalAtualizado);
+            model.addAttribute("racas", racaService.buscarTodasAsRacas());
+            model.addAttribute("clientes", clienteService.buscarTodosOsClientes());
+            return "animais/editar";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensagemErro", "Erro ao atualizar produto: " + e.getMessage());
-            return "redirect:/produtos/editar/" + id;
+            return "redirect:/animais/editar/" + id;
         }
     }
 
