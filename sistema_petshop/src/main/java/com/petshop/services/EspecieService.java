@@ -22,9 +22,10 @@ public class EspecieService {
         return especieRepository.findAll();
     }
 
-    public Optional<Especie> buscarPorId(Integer id) {
-        return especieRepository.findById(id);
-    }
+    // (METODO NÃO TÃO CONVENCIONAL)
+    // public Optional<Especie> buscarPorId(Integer id) {
+    //     return especieRepository.findById(id);
+    // }
 
     public Especie buscarPorIdOuFalhar(Integer id) {
         return buscarPorId(id)
